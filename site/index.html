@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LixenAI Marketing Agent Team</title>
+    <meta name="description" content="Internal multi-agent marketing command system for LixenAI.">
+    <style>
+      :root { --navy:#0d3070; --blue:#1e5ba8; --tint:#ebf2fa; --ink:#1d2733; --muted:#5c6b7d; --line:#d9e2ee; --bg:#f6f8fb; --white:#fff; }
+      * { box-sizing: border-box; }
+      body { margin:0; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color:var(--ink); background:var(--bg); line-height:1.55; }
+      header { background:var(--navy); color:var(--white); padding:52px 24px 44px; }
+      main { padding:34px 24px 56px; }
+      .wrap { width:min(1120px, 100%); margin:0 auto; }
+      .eyebrow { margin:0 0 12px; color:#b9d8ff; font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; }
+      h1 { margin:0; max-width:900px; font-size:clamp(40px, 7vw, 76px); line-height:.98; letter-spacing:0; }
+      .hero-copy { max-width:760px; margin:22px 0 0; color:#e5efff; font-size:19px; }
+      .toolbar { display:flex; flex-wrap:wrap; gap:10px; margin:0 0 28px; }
+      .button { display:inline-flex; align-items:center; min-height:42px; padding:9px 14px; border:1px solid var(--line); border-radius:6px; background:var(--white); color:var(--blue); font-weight:700; text-decoration:none; }
+      section { margin-top:34px; }
+      h2 { margin:0 0 14px; font-size:25px; letter-spacing:0; }
+      .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(245px, 1fr)); gap:14px; }
+      .card { min-height:138px; padding:18px; border:1px solid var(--line); border-radius:8px; background:var(--white); }
+      .card h3 { margin:0 0 8px; font-size:18px; }
+      .card p { margin:0; color:var(--muted); font-size:15px; }
+      .card a { color:var(--blue); font-weight:700; text-decoration:none; }
+      .band { padding:22px; border:1px solid var(--line); border-radius:8px; background:var(--tint); }
+      ul { margin:0; padding-left:20px; } li + li { margin-top:8px; }
+      footer { padding:24px; border-top:1px solid var(--line); color:var(--muted); background:var(--white); }
+    </style>
+  </head>
+  <body>
+    <header><div class="wrap"><p class="eyebrow">LixenAI Internal System</p><h1>Marketing Agent Team</h1><p class="hero-copy">A multi-agent command system for campaign planning, Agency Partner recruitment, copywriting, ad strategy, organic content, and sales enablement.</p></div></header>
+    <main><div class="wrap">
+      <nav class="toolbar" aria-label="Primary documents">
+        <a class="button" href="lixenai-marketing-agents/README.md">README</a>
+        <a class="button" href="lixenai-marketing-agents/config/lixenai-brand-rules.yaml">Brand Rules</a>
+        <a class="button" href="lixenai-marketing-agents/qa/content-qa-checklist.md">QA Checklist</a>
+        <a class="button" href="lixenai-marketing-agents/examples/example-commands.md">Example Commands</a>
+      </nav>
+      <section class="band"><p>Core promise: <strong>You close. We build, deploy, and deliver.</strong> The system is partner-first, med spa production-first, and gated against unsupported claims.</p></section>
+      <section><h2>Agents</h2><div class="grid">
+        <article class="card"><h3><a href="lixenai-marketing-agents/agents/marketing-director.md">Marketing Director</a></h3><p>Weekly priorities, strategy, assignments, readiness, and final review.</p></article>
+        <article class="card"><h3><a href="lixenai-marketing-agents/agents/campaign-agent.md">Campaign Agent</a></h3><p>Campaign briefs, channel plans, CTAs, and measurement plans.</p></article>
+        <article class="card"><h3><a href="lixenai-marketing-agents/agents/partner-acquisition-agent.md">Partner Acquisition</a></h3><p>Agency Partner recruitment messaging, DMs, applications, and qualification assets.</p></article>
+        <article class="card"><h3><a href="lixenai-marketing-agents/agents/copywriting-agent.md">Copywriting Agent</a></h3><p>Landing pages, CTAs, scripts, posts, and compliant conversion copy.</p></article>
+        <article class="card"><h3><a href="lixenai-marketing-agents/agents/ads-manager-agent.md">Ads Manager</a></h3><p>Ad angles and test plans gated until proof is ready.</p></article>
+        <article class="card"><h3><a href="lixenai-marketing-agents/agents/social-media-agent.md">Social Media</a></h3><p>LinkedIn, Instagram, TikTok, YouTube Shorts, hooks, captions, and calendars.</p></article>
+        <article class="card"><h3><a href="lixenai-marketing-agents/agents/sales-enablement-agent.md">Sales Enablement</a></h3><p>Discovery scripts, demo scripts, objections, proposals, and training assets.</p></article>
+      </div></section>
+      <section><h2>Workflows</h2><div class="grid">
+        <article class="card"><h3><a href="lixenai-marketing-agents/workflows/weekly-marketing-workflow.md">Weekly Marketing</a></h3><p>Set weekly objectives, assign agents, and review outputs.</p></article>
+        <article class="card"><h3><a href="lixenai-marketing-agents/workflows/campaign-production-workflow.md">Campaign Production</a></h3><p>Move from campaign brief to copy, social, ads, outreach, and sales assets.</p></article>
+        <article class="card"><h3><a href="lixenai-marketing-agents/workflows/partner-recruitment-workflow.md">Partner Recruitment</a></h3><p>Recruit qualified Agency Partners without unsupported income claims.</p></article>
+        <article class="card"><h3><a href="lixenai-marketing-agents/workflows/sales-enablement-workflow.md">Sales Enablement</a></h3><p>Build demo, discovery, objection, proposal, and handoff materials.</p></article>
+      </div></section>
+      <section><h2>QA Gates</h2><ul><li>Clear audience and CTA.</li><li>No unsupported income, appointment, revenue, or healthcare compliance claims.</li><li>Agency Partner messaging uses independent, performance-based language.</li><li>Med spa remains the current production niche.</li><li>Human review is required before publishing.</li></ul></section>
+    </div></main>
+    <footer><div class="wrap">LixenAI Marketing Agent Team</div></footer>
+  </body>
+</html>
