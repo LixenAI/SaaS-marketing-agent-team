@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: lixenai-marketing-agent-team
+    runtime: static
+    plan: free
+    branch: main
+    buildCommand: cp -R lixenai-marketing-agents site/
+    staticPublishPath: ./site
+    autoDeploy: true
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=300
