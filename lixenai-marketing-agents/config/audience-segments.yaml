@@ -1,0 +1,54 @@
+audience_segments:
+  agency_partners:
+    description: "Sales-capable people who can create pipeline, run discovery, present demos, follow up, and close clients."
+    approved_profiles:
+      - high-ticket closers
+      - commission B2B reps
+      - employed sales professionals
+      - sales managers
+      - agency-curious operators
+      - AI-curious entrepreneurs with real sales discipline
+    disqualifiers:
+      - expects passive income
+      - refuses prospecting
+      - wants guaranteed earnings
+      - cannot explain a discovery-to-close process
+      - wants to bypass LixenAI fulfillment
+      - makes unethical claims
+      - cannot commit consistent weekly effort
+    primary_ctas:
+      - Apply to become an Agency Partner
+      - Watch the live demo
+      - Request the partner overview
+      - Book a partner interview
+  med_spa_clients:
+    description: "Med spa and aesthetic clinic owners, operators, and practice managers who need better inbound lead handling and follow-up."
+    production_status: "current production niche"
+    pains:
+      - missed calls
+      - slow follow-up
+      - inconsistent lead capture
+      - no-show recovery
+      - stale database reactivation
+      - front desk overload
+    outcome_language:
+      - recover missed inquiries
+      - improve speed-to-lead
+      - support booking follow-up
+      - reduce manual follow-up gaps
+      - escalate to humans when needed
+    primary_ctas:
+      - Book a live demo
+      - Request a niche snapshot
+      - Review the AI Growth System
+  internal_team:
+    description: "Founder, operators, and fulfillment team members using agents to produce strategy, copy, assets, and sales support."
+    output_rules:
+      - be practical
+      - make recommendations clear
+      - flag readiness risks
+      - separate partner-facing, client-facing, and internal assets
+  future_niches:
+    description: "Industries outside med spa and aesthetic clinic."
+    production_status: "future or conditional unless approved"
+    messaging_rule: "Do not imply these are production-ready without explicit approval."
