@@ -1,0 +1,49 @@
+compliance:
+  human_review_required: true
+  global_rules:
+    - "Do not create unsupported income claims."
+    - "Do not claim guaranteed clients, guaranteed revenue, or guaranteed appointments."
+    - "Do not imply employment, salary, or wages for Agency Partners."
+    - "Use 'independent, performance-based partner opportunity' when describing the partner program."
+    - "For paid ads, include a disclaimer when income examples are used."
+    - "Treat med spa as the current production niche."
+    - "Do not imply that all industries are production-ready."
+    - "When mentioning other industries, say they are future or conditional opportunities unless approved."
+    - "Tie marketing messages to business outcomes, not hype."
+    - "All content must be clear, practical, and founder-ready."
+  blocked_claim_types:
+    income:
+      - guaranteed earnings
+      - guaranteed revenue
+      - guaranteed first client
+      - passive income
+      - no work required
+      - salary or wage implication
+    client_acquisition:
+      - guaranteed appointments
+      - guaranteed clients
+      - done-for-you clients
+      - set-it-and-forget-it
+    healthcare:
+      - fully HIPAA compliant
+      - medical compliance claims without review
+      - patient outcome claims
+    niche_readiness:
+      - every niche is ready
+      - works for any industry without proof
+  required_income_disclaimer: "Income examples are illustrative. Actual results depend on partner activity, niche, market, sales ability, and effort. LixenAI does not guarantee earnings of any specific amount. This is not an employment offer; partners are independent contractors."
+  paid_ads_gate:
+    default_status: "not approved until readiness is confirmed"
+    required_before_launch:
+      - proof or case study
+      - funnel performance data
+      - tracking in place
+      - fulfillment readiness
+      - approved landing page
+      - human compliance review
+    fallback_when_not_ready:
+      - organic LinkedIn testing
+      - founder-led content
+      - LinkedIn outreach
+      - live demo promotion
+      - warm retargeting draft only
