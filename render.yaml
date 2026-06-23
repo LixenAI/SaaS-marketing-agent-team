@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: lixen-marketing-agent-os
+    runtime: node
+    rootDir: lixen-operator-app
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: OPERATOR_TOKEN
+        sync: false
+      - key: GHL_LOCATION_ID
+        value: C7e7ReTQ4FXMZp9TjxzU
+      - key: GHL_PRIVATE_INTEGRATION_TOKEN
+        sync: false
+      - key: GHL_API_BASE_URL
+        value: https://services.leadconnectorhq.com
+      - key: GHL_API_VERSION
+        value: 2021-07-28
+      - key: GHL_OPPORTUNITIES_API_VERSION
+        value: 2023-02-21
+      - key: LIXEN_CUSTOM_DOMAIN
+        value: marketing-agent.lixenai.com
+      - key: LIXEN_BOOKING_LINK
+        value: https://link.lixen.ai/widget/booking/W0BVrWmszScBAjQhN631
+      - key: LIXEN_SUPPORT_EMAIL
+        value: support@lixen.ai

@@ -1,0 +1,453 @@
+{
+  "source": {
+    "repo": "https://github.com/LixenAI/SaaS-marketing-agent-team",
+    "root": "lixenai-marketing-agents",
+    "note": "Documentation / prompt-spec library (Markdown + YAML). Ingested into static catalog at build time."
+  },
+  "categories": [
+    "Agents",
+    "Workflows",
+    "Templates",
+    "QA / Checklists",
+    "Config / Constraints",
+    "Examples"
+  ],
+  "items": [
+    {
+      "id": "agents/campaign-agent.md",
+      "category": "Agents",
+      "folder": "agents",
+      "filename": "campaign-agent.md",
+      "kind": "markdown",
+      "title": "Campaign Agent",
+      "summary": "The Campaign Agent turns business goals into structured marketing campaigns for LixenAI. It creates the bridge between strategy and production so copy, social, ads, partner acquisition, and sales enablement all work from the same brief.",
+      "sections": [
+        "Role",
+        "Inputs",
+        "Outputs",
+        "Default Campaign Format",
+        "Campaign Principles",
+        "Funnel Stages",
+        "Example Task"
+      ],
+      "lines": 117,
+      "bytes": 3629,
+      "repoPath": "lixenai-marketing-agents/agents/campaign-agent.md"
+    },
+    {
+      "id": "agents/copywriting-agent.md",
+      "category": "Agents",
+      "folder": "agents",
+      "filename": "copywriting-agent.md",
+      "kind": "markdown",
+      "title": "Copywriting Agent",
+      "summary": "The Copywriting Agent writes conversion-focused LixenAI copy. It turns campaign strategy into clear, practical, compliant marketing assets.",
+      "sections": [
+        "Role",
+        "Writing Style",
+        "Inputs",
+        "Outputs",
+        "Approved Positioning Anchors",
+        "Copy Review Checklist",
+        "Rewrite Rules",
+        "Example Task"
+      ],
+      "lines": 96,
+      "bytes": 2521,
+      "repoPath": "lixenai-marketing-agents/agents/copywriting-agent.md"
+    },
+    {
+      "id": "agents/marketing-director.md",
+      "category": "Agents",
+      "folder": "agents",
+      "filename": "marketing-director.md",
+      "kind": "markdown",
+      "title": "Marketing Director Agent",
+      "summary": "The Marketing Director Agent is the strategic operator for the LixenAI Marketing Agent Team. It owns weekly priorities, campaign selection, agent assignments, message consistency, readiness checks, and final go/no-go recommendations.",
+      "sections": [
+        "Role",
+        "Core Mandate",
+        "Inputs",
+        "Outputs",
+        "Default Output Format",
+        "Operating Rules",
+        "Assignment Matrix",
+        "Readiness Gate"
+      ],
+      "lines": 130,
+      "bytes": 4692,
+      "repoPath": "lixenai-marketing-agents/agents/marketing-director.md"
+    },
+    {
+      "id": "agents/partner-acquisition-agent.md",
+      "category": "Agents",
+      "folder": "agents",
+      "filename": "partner-acquisition-agent.md",
+      "kind": "markdown",
+      "title": "Partner Acquisition Agent",
+      "summary": "The Partner Acquisition Agent recruits qualified LixenAI Agency Partners. It creates partner-facing messaging, LinkedIn outreach, application funnel copy, interview questions, referral scripts, and recruitment campaign ideas.",
+      "sections": [
+        "Role",
+        "Core Message",
+        "Target Partner Profiles",
+        "Disqualification Signals",
+        "Inputs",
+        "Outputs",
+        "Messaging Rules",
+        "Qualification Questions"
+      ],
+      "lines": 92,
+      "bytes": 3418,
+      "repoPath": "lixenai-marketing-agents/agents/partner-acquisition-agent.md"
+    },
+    {
+      "id": "workflows/campaign-production-workflow.md",
+      "category": "Workflows",
+      "folder": "workflows",
+      "filename": "campaign-production-workflow.md",
+      "kind": "markdown",
+      "title": "Campaign Production Workflow",
+      "summary": "Use this workflow to turn one LixenAI business goal into a campaign package with copy, social content, ad drafts, outreach, and sales enablement.",
+      "sections": [
+        "Purpose",
+        "Multi-Agent Flow",
+        "Final Campaign Package"
+      ],
+      "lines": 124,
+      "bytes": 2275,
+      "repoPath": "lixenai-marketing-agents/workflows/campaign-production-workflow.md"
+    },
+    {
+      "id": "workflows/partner-recruitment-workflow.md",
+      "category": "Workflows",
+      "folder": "workflows",
+      "filename": "partner-recruitment-workflow.md",
+      "kind": "markdown",
+      "title": "Partner Recruitment Workflow",
+      "summary": "Use this workflow to recruit qualified LixenAI Agency Partners without making unsupported income claims or attracting passive-income seekers.",
+      "sections": [
+        "Purpose",
+        "Primary Audience",
+        "Funnel",
+        "Step 1: Define Recruitment Sprint",
+        "Step 2: Campaign Agent Builds Sprint Brief",
+        "Step 3: Partner Acquisition Agent Writes Funnel Assets",
+        "Step 4: Copywriting Agent Tightens The Page",
+        "Step 5: Social Media Agent Builds Organic Calendar"
+      ],
+      "lines": 105,
+      "bytes": 2442,
+      "repoPath": "lixenai-marketing-agents/workflows/partner-recruitment-workflow.md"
+    },
+    {
+      "id": "workflows/sales-enablement-workflow.md",
+      "category": "Workflows",
+      "folder": "workflows",
+      "filename": "sales-enablement-workflow.md",
+      "kind": "markdown",
+      "title": "Sales Enablement Workflow",
+      "summary": "Use this workflow to create sales assets that help Agency Partners present LixenAI clearly, ethically, and consistently.",
+      "sections": [
+        "Purpose",
+        "Owner",
+        "Inputs",
+        "Step 1: Select Demo Flow",
+        "Step 2: Build Discovery Script",
+        "Step 3: Build Demo Script",
+        "Step 4: Build Objection Library",
+        "Step 5: Build Proposal And Handoff Assets"
+      ],
+      "lines": 105,
+      "bytes": 1816,
+      "repoPath": "lixenai-marketing-agents/workflows/sales-enablement-workflow.md"
+    },
+    {
+      "id": "workflows/weekly-marketing-workflow.md",
+      "category": "Workflows",
+      "folder": "workflows",
+      "filename": "weekly-marketing-workflow.md",
+      "kind": "markdown",
+      "title": "Weekly Marketing Workflow",
+      "summary": "Use this workflow every week to set priorities for the LixenAI Marketing Agent Team.",
+      "sections": [
+        "Purpose",
+        "Owner",
+        "Inputs",
+        "Steps",
+        "Weekly Output"
+      ],
+      "lines": 98,
+      "bytes": 1878,
+      "repoPath": "lixenai-marketing-agents/workflows/weekly-marketing-workflow.md"
+    },
+    {
+      "id": "templates/ad-brief-template.md",
+      "category": "Templates",
+      "folder": "templates",
+      "filename": "ad-brief-template.md",
+      "kind": "markdown",
+      "title": "Ad Brief Template",
+      "summary": "Use this prompt with the Ads Manager Agent.",
+      "sections": [
+        "Required Income Disclaimer"
+      ],
+      "lines": 66,
+      "bytes": 1520,
+      "repoPath": "lixenai-marketing-agents/templates/ad-brief-template.md"
+    },
+    {
+      "id": "templates/campaign-brief-template.md",
+      "category": "Templates",
+      "folder": "templates",
+      "filename": "campaign-brief-template.md",
+      "kind": "markdown",
+      "title": "Campaign Brief Template",
+      "summary": "Use this prompt with the Campaign Agent.",
+      "sections": [],
+      "lines": 58,
+      "bytes": 1137,
+      "repoPath": "lixenai-marketing-agents/templates/campaign-brief-template.md"
+    },
+    {
+      "id": "templates/landing-page-copy-template.md",
+      "category": "Templates",
+      "folder": "templates",
+      "filename": "landing-page-copy-template.md",
+      "kind": "markdown",
+      "title": "Landing Page Copy Template",
+      "summary": "Use this prompt with the Copywriting Agent.",
+      "sections": [],
+      "lines": 50,
+      "bytes": 1039,
+      "repoPath": "lixenai-marketing-agents/templates/landing-page-copy-template.md"
+    },
+    {
+      "id": "templates/linkedin-outreach-template.md",
+      "category": "Templates",
+      "folder": "templates",
+      "filename": "linkedin-outreach-template.md",
+      "kind": "markdown",
+      "title": "LinkedIn Outreach Template",
+      "summary": "Use this prompt with the Partner Acquisition Agent.",
+      "sections": [],
+      "lines": 43,
+      "bytes": 1263,
+      "repoPath": "lixenai-marketing-agents/templates/linkedin-outreach-template.md"
+    },
+    {
+      "id": "templates/sales-script-template.md",
+      "category": "Templates",
+      "folder": "templates",
+      "filename": "sales-script-template.md",
+      "kind": "markdown",
+      "title": "Sales Script Template",
+      "summary": "Use this prompt with the Sales Enablement Agent.",
+      "sections": [],
+      "lines": 47,
+      "bytes": 1120,
+      "repoPath": "lixenai-marketing-agents/templates/sales-script-template.md"
+    },
+    {
+      "id": "templates/social-content-template.md",
+      "category": "Templates",
+      "folder": "templates",
+      "filename": "social-content-template.md",
+      "kind": "markdown",
+      "title": "Social Content Template",
+      "summary": "Use this prompt with the Social Media Agent.",
+      "sections": [],
+      "lines": 51,
+      "bytes": 957,
+      "repoPath": "lixenai-marketing-agents/templates/social-content-template.md"
+    },
+    {
+      "id": "qa/agent-output-review.md",
+      "category": "QA / Checklists",
+      "folder": "qa",
+      "filename": "agent-output-review.md",
+      "kind": "markdown",
+      "title": "Agent Output Review",
+      "summary": "Use this review whenever one agent hands work to another agent or to the Marketing Director Agent.",
+      "sections": [
+        "Review Questions",
+        "Review Output"
+      ],
+      "lines": 39,
+      "bytes": 843,
+      "repoPath": "lixenai-marketing-agents/qa/agent-output-review.md"
+    },
+    {
+      "id": "qa/content-qa-checklist.md",
+      "category": "QA / Checklists",
+      "folder": "qa",
+      "filename": "content-qa-checklist.md",
+      "kind": "markdown",
+      "title": "Content QA Checklist",
+      "summary": "Run this checklist before any LixenAI asset is published, sent, launched, or added to a partner playbook.",
+      "sections": [
+        "Required Checks",
+        "Automatic Fail Conditions",
+        "QA Output Format"
+      ],
+      "lines": 61,
+      "bytes": 2247,
+      "repoPath": "lixenai-marketing-agents/qa/content-qa-checklist.md"
+    },
+    {
+      "id": "qa/paid-ads-readiness-check.md",
+      "category": "QA / Checklists",
+      "folder": "qa",
+      "filename": "paid-ads-readiness-check.md",
+      "kind": "markdown",
+      "title": "Paid Ads Readiness Check",
+      "summary": "Use this before the Ads Manager Agent approves any paid campaign.",
+      "sections": [
+        "Default Rule",
+        "Readiness Questions",
+        "Recommendation Options",
+        "Output Format"
+      ],
+      "lines": 46,
+      "bytes": 1230,
+      "repoPath": "lixenai-marketing-agents/qa/paid-ads-readiness-check.md"
+    },
+    {
+      "id": "config/audience-segments.yaml",
+      "category": "Config / Constraints",
+      "folder": "config",
+      "filename": "audience-segments.yaml",
+      "kind": "yaml",
+      "title": "Audience Segments",
+      "summary": "Sales-capable people who can create pipeline, run discovery, present demos, follow up, and close clients. Top-level keys: audience_segments",
+      "sections": [],
+      "lines": 55,
+      "bytes": 2095,
+      "repoPath": "lixenai-marketing-agents/config/audience-segments.yaml"
+    },
+    {
+      "id": "config/compliance-rules.yaml",
+      "category": "Config / Constraints",
+      "folder": "config",
+      "filename": "compliance-rules.yaml",
+      "kind": "yaml",
+      "title": "Compliance Rules",
+      "summary": "Top-level keys: compliance",
+      "sections": [],
+      "lines": 50,
+      "bytes": 2113,
+      "repoPath": "lixenai-marketing-agents/config/compliance-rules.yaml"
+    },
+    {
+      "id": "config/lixenai-brand-rules.yaml",
+      "category": "Config / Constraints",
+      "folder": "config",
+      "filename": "lixenai-brand-rules.yaml",
+      "kind": "yaml",
+      "title": "Lixenai Brand Rules",
+      "summary": "Top-level keys: brand",
+      "sections": [],
+      "lines": 51,
+      "bytes": 1894,
+      "repoPath": "lixenai-marketing-agents/config/lixenai-brand-rules.yaml"
+    },
+    {
+      "id": "config/offers.yaml",
+      "category": "Config / Constraints",
+      "folder": "config",
+      "filename": "offers.yaml",
+      "kind": "yaml",
+      "title": "Offers",
+      "summary": "Independent, performance-based partner opportunity for sales-capable people who want to sell a finished AI Growth System while LixenAI handles done-for-you deployment and fulfillment backend. Top-level keys: offers",
+      "sections": [],
+      "lines": 59,
+      "bytes": 2169,
+      "repoPath": "lixenai-marketing-agents/config/offers.yaml"
+    },
+    {
+      "id": "examples/example-commands.md",
+      "category": "Examples",
+      "folder": "examples",
+      "filename": "example-commands.md",
+      "kind": "markdown",
+      "title": "Example Commands",
+      "summary": "Use these with Codex or with individual agent files.",
+      "sections": [
+        "Marketing Director Agent",
+        "Campaign Agent",
+        "Partner Acquisition Agent",
+        "Copywriting Agent",
+        "Ads Manager Agent",
+        "Social Media Agent",
+        "Sales Enablement Agent",
+        "QA Review"
+      ],
+      "lines": 52,
+      "bytes": 1347,
+      "repoPath": "lixenai-marketing-agents/examples/example-commands.md"
+    },
+    {
+      "id": "examples/sample-agent-collaboration.md",
+      "category": "Examples",
+      "folder": "examples",
+      "filename": "sample-agent-collaboration.md",
+      "kind": "markdown",
+      "title": "Sample Agent Collaboration",
+      "summary": "Create a 14-day LinkedIn campaign to recruit founding LixenAI Agency Partners.",
+      "sections": [
+        "Goal",
+        "Step 1: Marketing Director Agent",
+        "Step 2: Campaign Agent",
+        "Step 3: Copywriting Agent",
+        "Step 4: Social Media Agent",
+        "Step 5: Partner Acquisition Agent",
+        "Step 6: Ads Manager Agent",
+        "Step 7: Sales Enablement Agent"
+      ],
+      "lines": 82,
+      "bytes": 1797,
+      "repoPath": "lixenai-marketing-agents/examples/sample-agent-collaboration.md"
+    },
+    {
+      "id": "agents/ads-manager-agent.md",
+      "category": "Agents",
+      "folder": "agents",
+      "filename": "ads-manager-agent.md",
+      "kind": "markdown",
+      "title": "Ads Manager Agent",
+      "summary": "Ad angles, ad copy, creative briefs, and paid-readiness gating. Referenced in the README agent roster but not yet present as a file in the source repo \u2014 seeded from repo documentation.",
+      "sections": [],
+      "lines": 0,
+      "bytes": 0,
+      "repoPath": "lixenai-marketing-agents/agents/ads-manager-agent.md",
+      "seeded": true
+    },
+    {
+      "id": "agents/social-media-agent.md",
+      "category": "Agents",
+      "folder": "agents",
+      "filename": "social-media-agent.md",
+      "kind": "markdown",
+      "title": "Social Media Agent",
+      "summary": "LinkedIn, Instagram, TikTok, Shorts, and content calendars for organic-first partner recruitment. Referenced in the README agent roster but not yet present as a file in the source repo \u2014 seeded from repo documentation.",
+      "sections": [],
+      "lines": 0,
+      "bytes": 0,
+      "repoPath": "lixenai-marketing-agents/agents/social-media-agent.md",
+      "seeded": true
+    },
+    {
+      "id": "agents/sales-enablement-agent.md",
+      "category": "Agents",
+      "folder": "agents",
+      "filename": "sales-enablement-agent.md",
+      "kind": "markdown",
+      "title": "Sales Enablement Agent",
+      "summary": "Discovery, demo, objection handling, proposals, and partner training. Referenced in the README agent roster but not yet present as a file in the source repo \u2014 seeded from repo documentation.",
+      "sections": [],
+      "lines": 0,
+      "bytes": 0,
+      "repoPath": "lixenai-marketing-agents/agents/sales-enablement-agent.md",
+      "seeded": true
+    }
+  ]
+}
