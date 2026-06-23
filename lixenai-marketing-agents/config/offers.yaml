@@ -1,0 +1,58 @@
+offers:
+  agency_partner_program:
+    audience: "Agency Partners"
+    description: "Independent, performance-based partner opportunity for sales-capable people who want to sell a finished AI Growth System while LixenAI handles done-for-you deployment and fulfillment backend."
+    core_message: "You close. We build, deploy, and deliver."
+    partner_owns:
+      - prospecting
+      - pipeline creation
+      - discovery
+      - live demo presentation
+      - follow-up
+      - closing
+      - ethical sales communication
+    lixenai_owns:
+      - platform
+      - AI Growth System
+      - demo assets
+      - scripts
+      - niche guidance
+      - implementation
+      - onboarding support
+      - fulfillment backend
+      - delivery support
+    not_a_fit_if:
+      - expects passive income
+      - wants guaranteed earnings
+      - refuses prospecting
+      - wants to bypass fulfillment
+      - makes unsupported claims
+    approved_ctas:
+      - Apply to become an Agency Partner
+      - Watch the live demo
+      - Request the partner overview
+  med_spa_ai_growth_system:
+    audience: "Med spa and aesthetic clinic clients"
+    production_status: "current production niche"
+    description: "Done-for-you AI automation system focused on missed-call recovery, speed-to-lead, booking follow-up, reminders, reactivation, and human escalation."
+    core_outcomes:
+      - recover missed inquiries
+      - respond faster to new leads
+      - support front desk capacity
+      - improve booking follow-up
+      - reactivate stale contacts
+      - escalate to humans when needed
+    approved_ctas:
+      - Book a live demo
+      - Request a niche snapshot
+      - Review the AI Growth System
+    restricted_claims:
+      - guaranteed appointments
+      - guaranteed revenue
+      - fully HIPAA compliant
+      - replaces staff
+  future_niche_expansion:
+    audience: "Future local service niches"
+    production_status: "conditional"
+    description: "Future or conditional opportunities that require proof, offer validation, and fulfillment readiness before public production-ready claims."
+    messaging_rule: "Mention only as future or conditional unless approved."
