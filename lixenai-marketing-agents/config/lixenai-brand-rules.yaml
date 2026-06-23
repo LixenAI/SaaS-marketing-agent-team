@@ -1,0 +1,50 @@
+brand:
+  name: LixenAI
+  system_name: LixenAI Marketing Agent Team
+  positioning: "Productized AI automation and fulfillment company for service-based local businesses."
+  core_promise:
+    - "You close. We build, deploy, and deliver."
+    - "You close. LixenAI delivers."
+  growth_model:
+    primary: "Agency Partner channel"
+    current_production_niche: "Med spa and aesthetic clinic"
+    crm_owner: "GoHighLevel handles nurture automation, pipeline tracking, CRM workflows, and analytics dashboards."
+  voice:
+    - direct
+    - clear
+    - practical
+    - founder-ready
+    - outcome-focused
+    - confident without hype
+  approved_language:
+    - Agency Partner
+    - AI Growth System
+    - done-for-you deployment
+    - live demo
+    - niche snapshot
+    - fulfillment backend
+    - working price
+    - illustrative revenue example
+    - You close. LixenAI delivers.
+    - You close. We build, deploy, and deliver.
+  avoid_language:
+    - GHL reseller
+    - passive income
+    - guaranteed appointments
+    - guaranteed earnings
+    - set-it-and-forget-it
+    - fully HIPAA compliant
+    - every niche is ready
+    - 24/7 human support unless contracted
+    - no work required
+    - done-for-you clients
+    - guaranteed first client
+    - guaranteed revenue
+    - own an AI company unless legal documents support ownership
+  messaging_rules:
+    - "Tie marketing messages to business outcomes, not hype."
+    - "Use med spa as the current production niche."
+    - "When mentioning other industries, describe them as future or conditional opportunities unless approved."
+    - "Partner-facing messaging must filter for sales ability and consistent weekly effort."
+    - "Client-facing messaging must focus on practical outcomes like missed-call recovery, speed-to-lead, booking follow-up, reminders, and reactivation."
+    - "All public content requires human review before publishing."
