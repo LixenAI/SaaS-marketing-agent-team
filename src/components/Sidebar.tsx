@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard,
   Users,
+  Megaphone,
   Workflow,
   FileText,
   Settings,
@@ -36,6 +37,7 @@ const navSections: NavSection[] = [
   {
     title: 'Operations',
     items: [
+      { label: 'Campaigns', icon: <Megaphone size={20} />, path: '/campaigns' },
       { label: 'Workflows', icon: <Workflow size={20} />, path: '/workflows' },
       { label: 'Templates', icon: <FileText size={20} />, path: '/templates' },
     ],
@@ -81,20 +83,18 @@ export default function Sidebar() {
       {/* Logo area */}
       <div className="flex items-center h-16 px-4 border-b border-[rgba(255,255,255,0.06)] shrink-0">
         <Link to="/" className="flex items-center gap-3 overflow-hidden">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-[#8B5CF6] to-[#06B6D4] flex items-center justify-center shrink-0">
-            <span className="text-white font-bold text-sm">L</span>
-          </div>
+          <img src="/lixenai-icon.png" alt="LixenAI" className="w-8 h-8 shrink-0" />
           <AnimatePresence>
             {!collapsed && (
-              <motion.span
+              <motion.img
+                src="/lixenai-logo.png"
+                alt="LixenAI"
+                className="h-7"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -10 }}
                 transition={{ duration: 0.2 }}
-                className="text-white font-semibold text-lg whitespace-nowrap"
-              >
-                LixenAI
-              </motion.span>
+              />
             )}
           </AnimatePresence>
         </Link>
