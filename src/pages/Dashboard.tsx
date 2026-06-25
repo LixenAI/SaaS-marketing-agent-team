@@ -16,6 +16,12 @@ import {
   Users,
   BarChart3,
   Activity,
+  Target,
+  Megaphone,
+  UserPlus,
+  PenTool,
+  Share2,
+  Phone,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -31,7 +37,7 @@ interface KPICard {
 interface AgentCard {
   name: string
   role: string
-  icon: string
+  icon: React.ElementType
   status: 'active' | 'idle' | 'offline'
   capabilities: string[]
   color: string
@@ -40,7 +46,6 @@ interface AgentCard {
 interface WorkflowCard {
   name: string
   description: string
-  image: string
   steps: number
   progress: number
   status: 'in-progress' | 'completed' | 'not-started'
@@ -66,7 +71,7 @@ const agents: AgentCard[] = [
   {
     name: 'Marketing Director',
     role: 'Strategy Lead',
-    icon: '/agent-director.png',
+    icon: Target,
     status: 'active',
     capabilities: ['Weekly Planning', 'Priority Assignment', 'Final Review'],
     color: 'from-violet-500 to-purple-600',
@@ -74,7 +79,7 @@ const agents: AgentCard[] = [
   {
     name: 'Campaign Agent',
     role: 'Campaign Builder',
-    icon: '/agent-campaign.png',
+    icon: Megaphone,
     status: 'active',
     capabilities: ['Brief Creation', 'Timeline Planning', 'Channel Strategy'],
     color: 'from-cyan-500 to-teal-600',
@@ -82,7 +87,7 @@ const agents: AgentCard[] = [
   {
     name: 'Partner Acquisition',
     role: 'Recruitment',
-    icon: '/agent-partner.png',
+    icon: UserPlus,
     status: 'active',
     capabilities: ['LinkedIn Outreach', 'Qualification', 'Recruitment Copy'],
     color: 'from-violet-500 to-indigo-600',
@@ -90,7 +95,7 @@ const agents: AgentCard[] = [
   {
     name: 'Copywriting Agent',
     role: 'Copy Creator',
-    icon: '/agent-copy.png',
+    icon: PenTool,
     status: 'idle',
     capabilities: ['Landing Pages', 'CTAs', 'Conversion Copy'],
     color: 'from-cyan-500 to-blue-600',
@@ -98,7 +103,7 @@ const agents: AgentCard[] = [
   {
     name: 'Ads Manager',
     role: 'Paid Media',
-    icon: '/agent-ads.png',
+    icon: BarChart3,
     status: 'active',
     capabilities: ['Ad Angles', 'Creative Briefs', 'Paid Readiness'],
     color: 'from-amber-500 to-orange-600',
@@ -106,7 +111,7 @@ const agents: AgentCard[] = [
   {
     name: 'Social Media',
     role: 'Content',
-    icon: '/agent-social.png',
+    icon: Share2,
     status: 'active',
     capabilities: ['LinkedIn', 'Instagram', 'TikTok', 'Content Calendars'],
     color: 'from-rose-500 to-pink-600',
@@ -114,7 +119,7 @@ const agents: AgentCard[] = [
   {
     name: 'Sales Enablement',
     role: 'Sales Support',
-    icon: '/agent-sales.png',
+    icon: Phone,
     status: 'idle',
     capabilities: ['Discovery', 'Demo Scripts', 'Objection Handling'],
     color: 'from-emerald-500 to-green-600',
@@ -125,7 +130,6 @@ const workflows: WorkflowCard[] = [
   {
     name: 'Weekly Marketing Workflow',
     description: 'Plan, assign, and review weekly marketing priorities across all channels.',
-    image: '/workflow-weekly.png',
     steps: 5,
     progress: 60,
     status: 'in-progress',
@@ -134,7 +138,6 @@ const workflows: WorkflowCard[] = [
   {
     name: 'Campaign Production Workflow',
     description: 'End-to-end campaign creation from brief to asset production and review.',
-    image: '/workflow-campaign.png',
     steps: 6,
     progress: 33,
     status: 'in-progress',
@@ -205,9 +208,7 @@ export default function Dashboard() {
         <div
           className="relative overflow-hidden rounded-2xl p-8"
           style={{
-            backgroundImage: 'url(/dashboard-hero-mesh.png)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
+            background: 'linear-gradient(135deg, rgba(139,92,246,0.15) 0%, rgba(6,182,212,0.1) 50%, rgba(139,92,246,0.08) 100%)',
           }}
         >
           <div className="relative z-10">
@@ -215,7 +216,7 @@ export default function Dashboard() {
               {getGreeting()}, Admin
             </h1>
             <p className="mt-2 text-text-secondary">
-              Your marketing command center is ready. Here's what's happening today.
+              Your marketing command center is ready. Here&apos;s what&apos;s happening today.
             </p>
             <div className="mt-4 flex items-center gap-2 text-sm text-text-tertiary">
               <Clock className="h-4 w-4" />
@@ -298,53 +299,56 @@ export default function Dashboard() {
             </button>
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-            {agents.slice(0, 5).map((agent) => (
-              <motion.div
-                key={agent.name}
-                variants={fadeUp}
-                className="rounded-xl border border-white/[0.06] bg-bg-surface p-5 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-accent-violet/30 hover:shadow-glow-violet cursor-pointer group"
-              >
-                <div className="flex items-start gap-4">
-                  <div
-                    className={cn(
-                      'flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-r',
-                      agent.color
-                    )}
-                  >
-                    <img src={agent.icon} alt={agent.name} className="h-7 w-7 object-contain" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="truncate text-sm font-semibold text-text-primary">{agent.name}</h3>
-                      <span
-                        className={cn(
-                          'h-2 w-2 shrink-0 rounded-full',
-                          agent.status === 'active'
-                            ? 'bg-accent-emerald'
-                            : agent.status === 'idle'
-                              ? 'bg-accent-amber'
-                              : 'bg-text-disabled'
-                        )}
-                      />
-                    </div>
-                    <p className="text-xs text-text-tertiary">{agent.role}</p>
-                  </div>
-                </div>
-                <div className="mt-3 flex flex-wrap gap-1.5">
-                  {agent.capabilities.slice(0, 3).map((cap) => (
-                    <span
-                      key={cap}
-                      className="rounded-full bg-bg-elevated px-2 py-0.5 text-[10px] text-text-tertiary border border-white/[0.04]"
+            {agents.slice(0, 5).map((agent) => {
+              const AgentIcon = agent.icon
+              return (
+                <motion.div
+                  key={agent.name}
+                  variants={fadeUp}
+                  className="rounded-xl border border-white/[0.06] bg-bg-surface p-5 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-accent-violet/30 hover:shadow-glow-violet cursor-pointer group"
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className={cn(
+                        'flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-r',
+                        agent.color
+                      )}
                     >
-                      {cap}
-                    </span>
-                  ))}
-                </div>
-                <button className="mt-4 w-full rounded-lg bg-bg-elevated py-2 text-xs font-medium text-text-secondary transition-colors hover:bg-accent-violet/10 hover:text-accent-violet border border-white/[0.04]">
-                  Launch
-                </button>
-              </motion.div>
-            ))}
+                      <AgentIcon className="h-6 w-6 text-white" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="truncate text-sm font-semibold text-text-primary">{agent.name}</h3>
+                        <span
+                          className={cn(
+                            'h-2 w-2 shrink-0 rounded-full',
+                            agent.status === 'active'
+                              ? 'bg-accent-emerald'
+                              : agent.status === 'idle'
+                                ? 'bg-accent-amber'
+                                : 'bg-text-disabled'
+                          )}
+                        />
+                      </div>
+                      <p className="text-xs text-text-tertiary">{agent.role}</p>
+                    </div>
+                  </div>
+                  <div className="mt-3 flex flex-wrap gap-1.5">
+                    {agent.capabilities.slice(0, 3).map((cap) => (
+                      <span
+                        key={cap}
+                        className="rounded-full bg-bg-elevated px-2 py-0.5 text-[10px] text-text-tertiary border border-white/[0.04]"
+                      >
+                        {cap}
+                      </span>
+                    ))}
+                  </div>
+                  <button className="mt-4 w-full rounded-lg bg-bg-elevated py-2 text-xs font-medium text-text-secondary transition-colors hover:bg-accent-violet/10 hover:text-accent-violet border border-white/[0.04]">
+                    Launch
+                  </button>
+                </motion.div>
+              )
+            })}
           </div>
         </motion.div>
 
@@ -415,7 +419,18 @@ export default function Dashboard() {
               className="rounded-xl border border-white/[0.06] bg-bg-surface shadow-card overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-accent-violet/30 hover:shadow-elevated"
             >
               <div className="relative h-32 overflow-hidden">
-                <img src={wf.image} alt={wf.name} className="h-full w-full object-cover" />
+                <div
+                  className="absolute inset-0 flex items-center justify-center"
+                  style={{
+                    background: wf.color === 'bg-accent-violet'
+                      ? 'linear-gradient(135deg, rgba(139,92,246,0.2), rgba(139,92,246,0.05))'
+                      : 'linear-gradient(135deg, rgba(6,182,212,0.2), rgba(6,182,212,0.05))',
+                  }}
+                >
+                  <Workflow className="h-16 w-16 opacity-30"
+                    style={{ color: wf.color === 'bg-accent-violet' ? '#8B5CF6' : '#06B6D4' }}
+                  />
+                </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-bg-surface to-transparent" />
                 <div className="absolute bottom-3 left-4 right-4">
                   <span
