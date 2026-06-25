@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Link2,
-  LinkOff,
+  Unlink,
   RefreshCw,
   Check,
   AlertCircle,
