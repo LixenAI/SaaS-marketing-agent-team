@@ -21,6 +21,8 @@ import {
   Grid3X3,
   List,
   ChevronRight,
+  Image,
+  Hexagon,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -540,7 +542,9 @@ export default function Assets() {
           animate={{ opacity: 1, y: 0 }}
           className="flex flex-col items-center justify-center py-16"
         >
-          <img src="/empty-state-templates.png" alt="No assets" className="w-56 h-40 object-contain mb-4 opacity-50" />
+          <div className="w-24 h-24 rounded-full bg-[#111118] border border-[rgba(255,255,255,0.06)] flex items-center justify-center mb-4">
+            <Image size={40} className="text-[#475569]" />
+          </div>
           <p className="text-[#94A3B8] text-[16px] mb-1">No assets generated yet</p>
           <p className="text-[#64748B] text-[13px]">Select an asset type above to create your first asset</p>
         </motion.div>
@@ -1061,7 +1065,7 @@ function AssetWizard({
               <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                 {formData.includeLogo && (
                   <div className="absolute top-4 right-4 flex items-center gap-1.5">
-                    <img src="/lixenai-icon.png" alt="LixenAI" className="w-6 h-6" />
+                    <Hexagon size={20} className="text-[#F1F5F9]/60" />
                     <span className="text-[10px] font-semibold text-[#F1F5F9]/60">LixenAI</span>
                   </div>
                 )}
