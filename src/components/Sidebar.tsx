@@ -1,130 +1,181 @@
-import { useState } from 'react'
-import { NavLink } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { useState, useCallback } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   LayoutDashboard,
-  Bot,
+  Users,
   Workflow,
   FileText,
-  Shield,
-  ClipboardCheck,
-  Palette,
+  Settings,
+  ShieldCheck,
+  Wand2,
   ChevronLeft,
   ChevronRight,
-  Settings,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
+} from 'lucide-react';
 
 interface NavItem {
-  to: string
-  label: string
-  icon: React.ElementType
-  section: string
+  label: string;
+  icon: React.ReactNode;
+  path: string;
 }
 
-const navItems: NavItem[] = [
-  { to: '/', label: 'Dashboard', icon: LayoutDashboard, section: 'Command Center' },
-  { to: '/agents', label: 'Agents', icon: Bot, section: 'Command Center' },
-  { to: '/workflows', label: 'Workflows', icon: Workflow, section: 'Operations' },
-  { to: '/templates', label: 'Templates', icon: FileText, section: 'Operations' },
-  { to: '/brand', label: 'Brand Config', icon: Shield, section: 'Quality' },
-  { to: '/qa', label: 'QA Hub', icon: ClipboardCheck, section: 'Quality' },
-  { to: '/assets', label: 'Asset Generator', icon: Palette, section: 'Assets' },
-]
+interface NavSection {
+  title: string;
+  items: NavItem[];
+}
 
-const sections = ['Command Center', 'Operations', 'Quality', 'Assets']
+const navSections: NavSection[] = [
+  {
+    title: 'Command Center',
+    items: [
+      { label: 'Dashboard', icon: <LayoutDashboard size={20} />, path: '/' },
+      { label: 'Agents', icon: <Users size={20} />, path: '/agents' },
+    ],
+  },
+  {
+    title: 'Operations',
+    items: [
+      { label: 'Workflows', icon: <Workflow size={20} />, path: '/workflows' },
+      { label: 'Templates', icon: <FileText size={20} />, path: '/templates' },
+    ],
+  },
+  {
+    title: 'Quality',
+    items: [
+      { label: 'Brand Config', icon: <ShieldCheck size={20} />, path: '/brand' },
+      { label: 'QA Hub', icon: <ShieldCheck size={20} />, path: '/qa' },
+    ],
+  },
+  {
+    title: 'App',
+    items: [
+      { label: 'Asset Generator', icon: <Wand2 size={20} />, path: '/assets' },
+      { label: 'Settings', icon: <Settings size={20} />, path: '/settings' },
+    ],
+  },
+];
+
+const easeOutExpo = [0.16, 1, 0.3, 1] as [number, number, number, number];
 
 export default function Sidebar() {
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
+
+  const toggleCollapse = useCallback(() => {
+    setCollapsed((prev) => !prev);
+  }, []);
+
+  const isActive = (path: string) => {
+    if (path === '/') return location.pathname === '/';
+    return location.pathname.startsWith(path);
+  };
 
   return (
     <motion.aside
       animate={{ width: collapsed ? 72 : 256 }}
       transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      className="flex flex-col border-r border-white/[0.06] bg-bg-surface overflow-hidden"
+      className="fixed left-0 top-0 h-full bg-[#111118] border-r border-[rgba(255,255,255,0.06)] z-50 flex flex-col overflow-hidden"
     >
-      {/* Logo */}
-      <div className="flex h-16 items-center gap-3 border-b border-white/[0.06] px-4">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-accent-violet to-accent-cyan">
-          <span className="text-lg font-bold text-white font-headline">L</span>
-        </div>
-        {!collapsed && (
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="text-lg font-bold gradient-text font-headline whitespace-nowrap"
-          >
-            LixenAI
-          </motion.span>
-        )}
+      {/* Logo area */}
+      <div className="flex items-center h-16 px-4 border-b border-[rgba(255,255,255,0.06)] shrink-0">
+        <Link to="/" className="flex items-center gap-3 overflow-hidden">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-[#8B5CF6] to-[#06B6D4] flex items-center justify-center shrink-0">
+            <span className="text-white font-bold text-sm">L</span>
+          </div>
+          <AnimatePresence>
+            {!collapsed && (
+              <motion.span
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -10 }}
+                transition={{ duration: 0.2 }}
+                className="text-white font-semibold text-lg whitespace-nowrap"
+              >
+                LixenAI
+              </motion.span>
+            )}
+          </AnimatePresence>
+        </Link>
       </div>
 
-      {/* Nav Items */}
+      {/* Navigation sections */}
       <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-6">
-        {sections.map((section) => (
-          <div key={section}>
-            {!collapsed && (
-              <div className="mb-2 px-3 text-[11px] font-semibold uppercase tracking-wider text-text-tertiary">
-                {section}
-              </div>
-            )}
+        {navSections.map((section) => (
+          <div key={section.title}>
+            <AnimatePresence>
+              {!collapsed && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#64748B] px-3 mb-2"
+                >
+                  {section.title}
+                </motion.p>
+              )}
+            </AnimatePresence>
             <div className="space-y-1">
-              {navItems
-                .filter((item) => item.section === section)
-                .map((item) => (
-                  <NavLink
-                    key={item.to}
-                    to={item.to}
-                    end={item.to === '/'}
-                    className={({ isActive }) =>
-                      cn(
-                        'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-all duration-150 group relative',
-                        isActive
-                          ? 'bg-accent-violet/10 text-accent-violet-bright'
-                          : 'text-text-secondary hover:bg-white/[0.04] hover:text-text-primary hover:translate-x-1'
-                      )
-                    }
+              {section.items.map((item, idx) => {
+                const active = isActive(item.path);
+                return (
+                  <motion.div
+                    key={item.path}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: idx * 0.05, duration: 0.4, ease: easeOutExpo }}
                   >
-                    {({ isActive }) => (
-                      <>
-                        {isActive && (
-                          <motion.div
-                            layoutId="active-nav"
-                            className="absolute left-0 top-1/2 h-6 w-[3px] -translate-y-1/2 rounded-r-full bg-accent-violet"
-                            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                          />
+                    <Link
+                      to={item.path}
+                      className={
+                        'flex items-center gap-3 h-10 rounded-[10px] transition-all duration-150 relative ' +
+                        (collapsed ? 'justify-center px-0' : 'px-3') +
+                        ' ' +
+                        (active
+                          ? 'bg-[rgba(139,92,246,0.1)] text-[#A78BFA]'
+                          : 'text-[#94A3B8] hover:bg-[rgba(255,255,255,0.04)] hover:translate-x-1')
+                      }
+                      title={collapsed ? item.label : undefined}
+                    >
+                      {active && (
+                        <motion.div
+                          layoutId="sidebar-active-indicator"
+                          className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 bg-[#8B5CF6] rounded-r-full"
+                          transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                        />
+                      )}
+                      <span className="shrink-0">{item.icon}</span>
+                      <AnimatePresence>
+                        {!collapsed && (
+                          <motion.span
+                            initial={{ opacity: 0, width: 0 }}
+                            animate={{ opacity: 1, width: 'auto' }}
+                            exit={{ opacity: 0, width: 0 }}
+                            className="text-sm font-medium whitespace-nowrap overflow-hidden"
+                          >
+                            {item.label}
+                          </motion.span>
                         )}
-                        <item.icon className="h-5 w-5 shrink-0" />
-                        {!collapsed && <span className="whitespace-nowrap">{item.label}</span>}
-                      </>
-                    )}
-                  </NavLink>
-                ))}
+                      </AnimatePresence>
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         ))}
       </nav>
 
-      {/* Bottom */}
-      <div className="border-t border-white/[0.06] p-3">
-        <div className="flex items-center gap-3 rounded-lg px-3 py-2">
-          <div className="h-8 w-8 shrink-0 rounded-full bg-gradient-to-br from-accent-violet to-accent-cyan" />
-          {!collapsed && (
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-medium text-text-primary truncate">Admin</div>
-              <div className="text-xs text-text-tertiary">LixenAI Team</div>
-            </div>
-          )}
-        </div>
+      {/* Bottom: collapse toggle */}
+      <div className="shrink-0 p-3 border-t border-[rgba(255,255,255,0.06)]">
         <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg py-2 text-text-tertiary hover:bg-white/[0.04] hover:text-text-secondary transition-colors"
+          onClick={toggleCollapse}
+          className="flex items-center justify-center w-full h-10 rounded-[10px] text-[#94A3B8] hover:bg-[rgba(255,255,255,0.04)] transition-colors duration-150"
+          title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-          {!collapsed && <span className="text-xs">Collapse</span>}
+          {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+          {!collapsed && <span className="ml-2 text-sm">Collapse</span>}
         </button>
       </div>
     </motion.aside>
-  )
+  );
 }

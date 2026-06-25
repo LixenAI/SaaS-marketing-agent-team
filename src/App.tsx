@@ -1,12 +1,13 @@
-import { Routes, Route } from 'react-router-dom'
-import Layout from './components/Layout'
-import Dashboard from './pages/Dashboard'
-import Agents from './pages/Agents'
-import Workflows from './pages/Workflows'
-import Templates from './pages/Templates'
-import Brand from './pages/Brand'
-import QA from './pages/QA'
-import Assets from './pages/Assets'
+import { Routes, Route } from 'react-router-dom';
+import Layout from './components/Layout';
+import Dashboard from './pages/Dashboard';
+import Agents from './pages/Agents';
+import Workflows from './pages/Workflows';
+import Templates from './pages/Templates';
+import Brand from './pages/Brand';
+import QA from './pages/QA';
+import Assets from './pages/Assets';
+import SettingsPage from './pages/Settings';
 
 export default function App() {
   return (
@@ -19,7 +20,8 @@ export default function App() {
         <Route path="brand" element={<Brand />} />
         <Route path="qa" element={<QA />} />
         <Route path="assets" element={<Assets />} />
+        <Route path="settings" element={<SettingsPage />} />
       </Route>
     </Routes>
-  )
+  );
 }
