@@ -2,524 +2,475 @@ import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Link2,
-  Unlink,
+  Link2Off,
   RefreshCw,
   Check,
   AlertCircle,
-  ExternalLink,
-  Users,
-  MessageSquare,
-  TrendingUp,
-  Mail,
-  Calendar,
   Zap,
-  ChevronRight,
   ChevronDown,
   ChevronUp,
-  Share2,
-  Camera,
-  Briefcase,
+  Facebook,
+  Instagram,
+  Linkedin,
   Play,
   Globe,
-  DollarSign,
-  BarChart3,
-  Target,
   Clock,
-  FileText,
   Plus,
-  Trash2,
-  Edit3,
   ToggleLeft,
   ToggleRight,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const easeOutExpo = [0.16, 1, 0.3, 1] as [number, number, number, number];
-
-/* TYPES */
+/* ─── Types ─── */
 interface Integration {
   id: string;
   name: string;
-  description: string;
-  icon: React.ReactNode;
   color: string;
   connected: boolean;
-  lastSync: string | null;
-  syncStatus: 'idle' | 'syncing' | 'error' | 'success';
-  dataPoints: DataPoint[];
+  description: string;
   features: string[];
-  authUrl: string;
-  requiresOAuth: boolean;
+  apiKey?: string;
+  lastSync: string | null;
+  recordsSynced: number;
 }
 
-interface DataPoint {
-  label: string;
-  value: string;
-  change?: string;
-  positive?: boolean;
-}
-
-interface SyncJob {
+interface SyncRecord {
   id: string;
   platform: string;
-  type: string;
-  status: 'pending' | 'running' | 'completed' | 'failed';
-  startedAt: string;
-  recordsCount: number;
+  status: 'success' | 'error' | 'pending';
+  records: number;
+  timestamp: string;
 }
 
-/* DATA */
-const INTEGRATIONS: Integration[] = [
+/* ─── Data ─── */
+const DEFAULT_INTEGRATIONS: Integration[] = [
   {
     id: 'ghl',
     name: 'GoHighLevel',
-    description: 'Sync contacts, pipelines, appointments, and campaigns with your GHL account.',
-    icon: <Zap size={24} />,
     color: '#8B5CF6',
     connected: false,
+    description: 'Sync contacts, pipelines, appointments, and conversations with your GHL sub-account.',
+    features: ['Contact Sync', 'Pipeline Import', 'Appointment Sync', 'Conversation History'],
     lastSync: null,
-    syncStatus: 'idle',
-    authUrl: 'https://marketplace.gohighlevel.com/oauth/chooselocation',
-    requiresOAuth: true,
-    features: [
-      'Contact sync (two-way)',
-      'Pipeline opportunity import',
-      'Appointment booking sync',
-      'Workflow trigger integration',
-      'Custom field mapping',
-      'Conversation history sync',
-    ],
-    dataPoints: [
-      { label: 'Contacts', value: '0', change: '+0', positive: true },
-      { label: 'Opportunities', value: '0', change: '+0', positive: true },
-      { label: 'Appointments', value: '0', change: '+0', positive: true },
-      { label: 'Conversations', value: '0', change: '+0', positive: true },
-    ],
+    recordsSynced: 0,
   },
   {
-    id: 'Briefcase',
-    name: 'Briefcase',
-    description: 'Schedule posts, manage outreach, and track engagement on Briefcase.',
-    icon: <Briefcase size={24} />,
+    id: 'linkedin',
+    name: 'LinkedIn',
     color: '#0077B5',
     connected: false,
+    description: 'Schedule posts, manage outreach campaigns, and track engagement from LinkedIn.',
+    features: ['Post Scheduling', 'DM Outreach', 'Analytics Sync', 'Company Pages'],
     lastSync: null,
-    syncStatus: 'idle',
-    authUrl: 'https://www.Briefcase.com/oauth/v2/authorization',
-    requiresOAuth: true,
-    features: [
-      'Post scheduling & publishing',
-      'DM outreach automation',
-      'Profile analytics sync',
-      'Company page management',
-      'Lead gen form integration',
-      'Comment & reply management',
-    ],
-    dataPoints: [
-      { label: 'Scheduled Posts', value: '0', change: '+0', positive: true },
-      { label: 'Followers', value: '0', change: '+0', positive: true },
-      { label: 'Engagement Rate', value: '0%', change: '+0%', positive: true },
-      { label: 'DM Conversations', value: '0', change: '+0', positive: true },
-    ],
+    recordsSynced: 0,
   },
   {
-    id: 'Camera',
-    name: 'Camera',
-    description: 'Schedule reels, stories, and posts. Sync analytics and manage comments.',
-    icon: <Camera size={24} />,
+    id: 'instagram',
+    name: 'Instagram',
     color: '#E4405F',
     connected: false,
+    description: 'Schedule reels and stories, sync analytics, and manage comments.',
+    features: ['Reel Scheduling', 'Story Publishing', 'Comment Management', 'Hashtag Analytics'],
     lastSync: null,
-    syncStatus: 'idle',
-    authUrl: 'https://www.Share2.com/v18.0/dialog/oauth',
-    requiresOAuth: true,
-    features: [
-      'Post & reel scheduling',
-      'Story publishing',
-      'Hashtag performance tracking',
-      'Comment auto-response',
-      'Analytics dashboard sync',
-      'Inbox message management',
-    ],
-    dataPoints: [
-      { label: 'Scheduled Posts', value: '0', change: '+0', positive: true },
-      { label: 'Followers', value: '0', change: '+0', positive: true },
-      { label: 'Engagement Rate', value: '0%', change: '+0%', positive: true },
-      { label: 'Reel Views', value: '0', change: '+0', positive: true },
-    ],
+    recordsSynced: 0,
   },
   {
     id: 'tiktok',
     name: 'TikTok',
-    description: 'Schedule TikTok videos, sync analytics, and manage your content calendar.',
-    icon: <Play size={24} />,
     color: '#000000',
     connected: false,
+    description: 'Schedule videos, find trending sounds, and sync analytics.',
+    features: ['Video Scheduling', 'Trending Sounds', 'Analytics Sync', 'Comment Replies'],
     lastSync: null,
-    syncStatus: 'idle',
-    authUrl: 'https://www.tiktok.com/v2/auth/authorize',
-    requiresOAuth: true,
-    features: [
-      'Video scheduling & publishing',
-      'Trending sound discovery',
-      'Analytics sync (views, likes, shares)',
-      'Comment management',
-      'Hashtag performance',
-      'Content calendar integration',
-    ],
-    dataPoints: [
-      { label: 'Scheduled Videos', value: '0', change: '+0', positive: true },
-      { label: 'Followers', value: '0', change: '+0', positive: true },
-      { label: 'Avg Watch Time', value: '0s', change: '+0s', positive: true },
-      { label: 'Total Views', value: '0', change: '+0', positive: true },
-    ],
+    recordsSynced: 0,
   },
   {
-    id: 'Share2-ads',
-    name: 'Share2 Ads',
-    description: 'Manage campaigns, audiences, and ad creatives. Import performance data.',
-    icon: <Share2 size={24} />,
+    id: 'facebook-ads',
+    name: 'Facebook Ads',
     color: '#1877F2',
     connected: false,
+    description: 'Manage campaigns, sync audiences, and import performance data.',
+    features: ['Campaign Management', 'Audience Sync', 'Performance Import', 'A/B Testing'],
     lastSync: null,
-    syncStatus: 'idle',
-    authUrl: 'https://www.Share2.com/v18.0/dialog/oauth',
-    requiresOAuth: true,
-    features: [
-      'Campaign creation & management',
-      'Audience sync (custom & lookalike)',
-      'Ad creative upload',
-      'Performance analytics import',
-      'Budget & bidding automation',
-      'A/B test management',
-    ],
-    dataPoints: [
-      { label: 'Active Campaigns', value: '0', change: '+0', positive: true },
-      { label: 'Ad Spend (MTD)', value: '$0', change: '+$0', positive: true },
-      { label: 'ROAS', value: '0x', change: '+0x', positive: true },
-      { label: 'Conversions', value: '0', change: '+0', positive: true },
-    ],
+    recordsSynced: 0,
   },
   {
     id: 'google-ads',
     name: 'Google Ads',
-    description: 'Sync search, display, and video campaigns. Import conversion data.',
-    icon: <Globe size={24} />,
     color: '#EA4335',
     connected: false,
+    description: 'Sync campaigns, track keywords, and import conversion data.',
+    features: ['Campaign Sync', 'Keyword Tracking', 'Conversion Import', 'Search Query Reports'],
     lastSync: null,
-    syncStatus: 'idle',
-    authUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
-    requiresOAuth: true,
-    features: [
-      'Campaign import & sync',
-      'Keyword performance tracking',
-      'Search query report sync',
-      'Conversion action mapping',
-      'Google Analytics 4 integration',
-      'Smart bidding insights',
-    ],
-    dataPoints: [
-      { label: 'Active Campaigns', value: '0', change: '+0', positive: true },
-      { label: 'Ad Spend (MTD)', value: '$0', change: '+$0', positive: true },
-      { label: 'CPC', value: '$0', change: '+$0', positive: true },
-      { label: 'Conversions', value: '0', change: '+0', positive: true },
-    ],
+    recordsSynced: 0,
   },
 ];
 
-const SYNC_JOBS: SyncJob[] = [
-  { id: 'sync-1', platform: 'GoHighLevel', type: 'Contact Import', status: 'completed', startedAt: '2026-06-24 14:30', recordsCount: 1240 },
-  { id: 'sync-2', platform: 'Briefcase', type: 'Post Analytics', status: 'completed', startedAt: '2026-06-24 13:00', recordsCount: 86 },
-  { id: 'sync-3', platform: 'Share2 Ads', type: 'Campaign Performance', status: 'completed', startedAt: '2026-06-24 12:00', recordsCount: 342 },
-  { id: 'sync-4', platform: 'Google Ads', type: 'Conversion Sync', status: 'failed', startedAt: '2026-06-24 11:45', recordsCount: 0 },
-  { id: 'sync-5', platform: 'Camera', type: 'Follower Growth', status: 'completed', startedAt: '2026-06-24 10:00', recordsCount: 56 },
+const SYNC_HISTORY: SyncRecord[] = [
+  { id: 's1', platform: 'ghl', status: 'success', records: 234, timestamp: '2026-06-24T10:30:00Z' },
+  { id: 's2', platform: 'linkedin', status: 'success', records: 12, timestamp: '2026-06-23T14:15:00Z' },
+  { id: 's3', platform: 'google-ads', status: 'error', records: 0, timestamp: '2026-06-22T09:00:00Z' },
+  { id: 's4', platform: 'facebook-ads', status: 'success', records: 89, timestamp: '2026-06-21T16:45:00Z' },
 ];
 
-/* STATUS BADGE */
-function StatusBadge({ status }: { status: Integration['syncStatus'] }) {
-  const map = {
-    idle: { text: 'Idle', cls: 'bg-[#2A2A38] text-[#64748B]' },
-    syncing: { text: 'Syncing...', cls: 'bg-[#8B5CF6]/15 text-[#8B5CF6]' },
-    error: { text: 'Error', cls: 'bg-[#F43F5E]/15 text-[#F43F5E]' },
-    success: { text: 'Synced', cls: 'bg-[#10B981]/15 text-[#10B981]' },
-  };
-  const s = map[status];
-  return <span className={cn('inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium', s.cls)}>{s.text}</span>;
+const easeOutExpo = [0.16, 1, 0.3, 1] as [number, number, number, number];
+
+/* ─── Platform Icons ─── */
+function PlatformIcon({ id, color }: { id: string; color: string }) {
+  switch (id) {
+    case 'ghl': return <Globe size={20} style={{ color }} />;
+    case 'linkedin': return <Linkedin size={20} style={{ color }} />;
+    case 'instagram': return <Instagram size={20} style={{ color }} />;
+    case 'tiktok': return <Play size={20} style={{ color }} />;
+    case 'facebook-ads': return <Facebook size={20} style={{ color }} />;
+    case 'google-ads': return <Globe size={20} style={{ color }} />;
+    default: return <Link2 size={20} style={{ color }} />;
+  }
 }
 
-function SyncJobStatus({ status }: { status: SyncJob['status'] }) {
-  const map = {
-    pending: { cls: 'bg-[#F59E0B]/15 text-[#F59E0B]', label: 'Pending' },
-    running: { cls: 'bg-[#8B5CF6]/15 text-[#8B5CF6]', label: 'Running' },
-    completed: { cls: 'bg-[#10B981]/15 text-[#10B981]', label: 'Completed' },
-    failed: { cls: 'bg-[#F43F5E]/15 text-[#F43F5E]', label: 'Failed' },
-  };
-  const s = map[status];
-  return <span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium', s.cls)}>{s.label}</span>;
-}
+/* ═══════════════════════════════════════════════════════════════════
+   MAIN COMPONENT
+   ═══════════════════════════════════════════════════════════════════ */
+export default function Integrations() {
+  const [integrations, setIntegrations] = useState<Integration[]>(() => {
+    const saved = localStorage.getItem('lixen_integrations');
+    return saved ? JSON.parse(saved) : DEFAULT_INTEGRATIONS;
+  });
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authIntegration, setAuthIntegration] = useState<Integration | null>(null);
+  const [apiKeyInput, setApiKeyInput] = useState('');
+  const [syncing, setSyncing] = useState<string | null>(null);
+  const [syncHistory, setSyncHistory] = useState<SyncRecord[]>(SYNC_HISTORY);
+  const [showFieldMapping, setShowFieldMapping] = useState<string | null>(null);
 
-/* INTEGRATION CARD */
-function IntegrationCard({
-  integration: int,
-  onToggle,
-  onSync,
-  expanded,
-  onExpand,
-}: {
-  integration: Integration;
-  onToggle: (id: string) => void;
-  onSync: (id: string) => void;
-  expanded: boolean;
-  onExpand: () => void;
-}) {
+  const persist = useCallback((next: Integration[]) => {
+    setIntegrations(next);
+    localStorage.setItem('lixen_integrations', JSON.stringify(next));
+  }, []);
+
+  const selected = integrations.find(i => i.id === selectedId);
+
+  const openAuth = useCallback((integration: Integration) => {
+    setAuthIntegration(integration);
+    setApiKeyInput(integration.apiKey || '');
+    setShowAuthModal(true);
+  }, []);
+
+  const connect = useCallback(() => {
+    if (!authIntegration) return;
+    const next = integrations.map(i =>
+      i.id === authIntegration.id
+        ? { ...i, connected: true, apiKey: apiKeyInput, lastSync: new Date().toISOString() }
+        : i
+    );
+    persist(next);
+    setShowAuthModal(false);
+    setAuthIntegration(null);
+    setApiKeyInput('');
+  }, [authIntegration, apiKeyInput, integrations, persist]);
+
+  const disconnect = useCallback((id: string) => {
+    const next = integrations.map(i =>
+      i.id === id ? { ...i, connected: false, apiKey: undefined, lastSync: null } : i
+    );
+    persist(next);
+  }, [integrations, persist]);
+
+  const syncNow = useCallback((id: string) => {
+    setSyncing(id);
+    setTimeout(() => {
+      const next = integrations.map(i =>
+        i.id === id ? { ...i, lastSync: new Date().toISOString(), recordsSynced: i.recordsSynced + Math.floor(Math.random() * 50) + 5 } : i
+      );
+      persist(next);
+      const record: SyncRecord = {
+        id: `s${Date.now()}`,
+        platform: id,
+        status: Math.random() > 0.1 ? 'success' : 'error',
+        records: Math.floor(Math.random() * 100) + 1,
+        timestamp: new Date().toISOString(),
+      };
+      setSyncHistory(prev => [record, ...prev]);
+      setSyncing(null);
+    }, 2000);
+  }, [integrations, persist]);
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease: easeOutExpo }}
-      className={cn('bg-[#111118] rounded-2xl border border-[rgba(255,255,255,0.06)] overflow-hidden transition-all duration-250', int.connected && 'border-[rgba(139,92,246,0.15)]')}
-    >
-      <div className="p-6">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl flex items-center justify-center text-white" style={{ background: `linear-gradient(135deg, ${int.color}, ${int.color}88)` }}>
-              {int.icon}
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-lg font-semibold text-[#F1F5F9]">{int.name}</h3>
-                {int.connected ? (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#10B981]/15 text-[#10B981] text-[11px] font-medium"><Check size={10} /> Connected</span>
+    <div className="min-h-[calc(100dvh-64px)] bg-[#0A0A0F] text-[#F1F5F9] p-6 lg:p-8">
+      <div className="max-w-[1400px] mx-auto">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight text-[#F1F5F9]">Integrations</h1>
+            <p className="text-sm text-[#64748B] mt-1">Connect your external accounts and sync data</p>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-[#64748B]">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#10B981]" />
+              {integrations.filter(i => i.connected).length} connected
+            </span>
+            <span className="text-[#475569]">·</span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#475569]" />
+              {integrations.filter(i => !i.connected).length} available
+            </span>
+          </div>
+        </div>
+
+        {/* Integration Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          {integrations.map((integration, i) => (
+            <motion.div
+              key={integration.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05, duration: 0.4, ease: easeOutExpo }}
+              className={cn(
+                'relative bg-[#111118] border rounded-2xl p-5 transition-all duration-200',
+                selectedId === integration.id
+                  ? 'border-[rgba(139,92,246,0.3)] shadow-lg shadow-[#8B5CF6]/5'
+                  : 'border-[rgba(255,255,255,0.06)] hover:border-[rgba(255,255,255,0.12)]',
+              )}
+            >
+              {/* Status indicator */}
+              <div className="absolute top-4 right-4">
+                {integration.connected ? (
+                  <span className="flex items-center gap-1 text-[11px] text-[#10B981] font-semibold">
+                    <Check size={12} /> Connected
+                  </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[#2A2A38] text-[#64748B] text-[11px] font-medium"><LinkOff size={10} /> Disconnected</span>
+                  <span className="flex items-center gap-1 text-[11px] text-[#64748B]">
+                    <Link2Off size={10} /> Disconnected
+                  </span>
                 )}
               </div>
-              <p className="text-[13px] text-[#94A3B8] mt-0.5 max-w-[400px]">{int.description}</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {int.connected && (
-              <>
-                <StatusBadge status={int.syncStatus} />
-                {int.lastSync && <span className="text-[11px] text-[#64748B] flex items-center gap-1"><Clock size={10} />{int.lastSync}</span>}
-              </>
-            )}
-          </div>
-        </div>
 
-        <div className="flex items-center gap-3 mt-4">
-          {int.connected ? (
-            <>
-              <button onClick={() => onSync(int.id)} disabled={int.syncStatus === 'syncing'} className={cn('flex items-center gap-2 px-4 py-2 rounded-[10px] text-[13px] font-medium transition-all', int.syncStatus === 'syncing' ? 'bg-[#1A1A24] text-[#64748B] cursor-not-allowed' : 'bg-[#8B5CF6]/10 text-[#8B5CF6] hover:bg-[#8B5CF6]/20')}>
-                <RefreshCw size={14} className={int.syncStatus === 'syncing' ? 'animate-spin' : ''} />
-                {int.syncStatus === 'syncing' ? 'Syncing...' : 'Sync Now'}
-              </button>
-              <button onClick={() => onToggle(int.id)} className="flex items-center gap-2 px-4 py-2 rounded-[10px] text-[13px] text-[#94A3B8] hover:text-[#F43F5E] hover:bg-[rgba(244,63,94,0.1)] transition-all">
-                <LinkOff size={14} /> Disconnect
-              </button>
-            </>
-          ) : (
-            <button onClick={() => onToggle(int.id)} className="flex items-center gap-2 px-5 py-2 rounded-[10px] text-[13px] font-medium text-white hover:brightness-110 transition-all" style={{ background: 'linear-gradient(135deg, #8B5CF6, #06B6D4)' }}>
-              <Link2 size={14} /> Connect
-            </button>
-          )}
-          <button onClick={onExpand} className="flex items-center gap-1 px-3 py-2 rounded-[10px] text-[13px] text-[#64748B] hover:text-[#F1F5F9] hover:bg-[rgba(255,255,255,0.04)] transition-all ml-auto">
-            {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-            {expanded ? 'Less' : 'Details'}
-          </button>
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {expanded && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3, ease: easeOutExpo }} className="overflow-hidden">
-            <div className="px-6 pb-6 border-t border-[rgba(255,255,255,0.04)]">
-              {int.connected && (
-                <div className="grid grid-cols-4 gap-3 mt-4 mb-5">
-                  {int.dataPoints.map((dp) => (
-                    <div key={dp.label} className="bg-[#0A0A0F] rounded-xl p-3 border border-[rgba(255,255,255,0.04)]">
-                      <p className="text-[11px] text-[#64748B] mb-1">{dp.label}</p>
-                      <p className="text-lg font-semibold text-[#F1F5F9]">{dp.value}</p>
-                      {dp.change && <p className={cn('text-[11px]', dp.positive ? 'text-[#10B981]' : 'text-[#F43F5E]')}>{dp.change}</p>}
-                    </div>
-                  ))}
+              {/* Icon + Name */}
+              <div className="flex items-center gap-3 mb-3">
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center"
+                  style={{ background: `${integration.color}15` }}
+                >
+                  <PlatformIcon id={integration.id} color={integration.color} />
                 </div>
-              )}
-              <div>
-                <p className="text-[13px] font-medium text-[#F1F5F9] mb-2">Available Features</p>
-                <div className="grid grid-cols-2 gap-2">
-                  {int.features.map((feat) => (
-                    <div key={feat} className={cn('flex items-center gap-2 px-3 py-2 rounded-lg text-[12px]', int.connected ? 'text-[#94A3B8] bg-[#0A0A0F]' : 'text-[#475569] bg-[#0A0A0F]/50')}>
-                      <Check size={12} className={int.connected ? 'text-[#10B981]' : 'text-[#475569]'} /> {feat}
-                    </div>
-                  ))}
+                <div>
+                  <h3 className="text-sm font-semibold text-[#F1F5F9]">{integration.name}</h3>
+                  <p className="text-[11px] text-[#64748B]">{integration.features.length} features</p>
                 </div>
               </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
 
-/* SYNC HISTORY */
-function SyncHistory() {
-  const [expanded, setExpanded] = useState(false);
-  return (
-    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.3, ease: easeOutExpo }} className="mt-8">
-      <button onClick={() => setExpanded(!expanded)} className="flex items-center gap-2 text-sm text-[#94A3B8] hover:text-[#F1F5F9] transition-colors mb-4">
-        {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />} Sync History
-      </button>
-      <AnimatePresence>
-        {expanded && (
-          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3, ease: easeOutExpo }} className="overflow-hidden">
-            <div className="bg-[#111118] rounded-2xl border border-[rgba(255,255,255,0.06)] overflow-hidden">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-[rgba(255,255,255,0.06)]">
-                    <th className="text-left text-xs font-medium text-[#64748B] px-6 py-3">Platform</th>
-                    <th className="text-left text-xs font-medium text-[#64748B] px-6 py-3">Type</th>
-                    <th className="text-left text-xs font-medium text-[#64748B] px-6 py-3">Status</th>
-                    <th className="text-left text-xs font-medium text-[#64748B] px-6 py-3">Records</th>
-                    <th className="text-left text-xs font-medium text-[#64748B] px-6 py-3">Started</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {SYNC_JOBS.map((job, i) => (
-                    <motion.tr key={job.id} initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }} className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors">
-                      <td className="px-6 py-3 text-sm text-[#F1F5F9]">{job.platform}</td>
-                      <td className="px-6 py-3 text-sm text-[#94A3B8]">{job.type}</td>
-                      <td className="px-6 py-3"><SyncJobStatus status={job.status} /></td>
-                      <td className="px-6 py-3 text-sm text-[#94A3B8]">{job.recordsCount.toLocaleString()}</td>
-                      <td className="px-6 py-3 text-sm text-[#64748B]">{job.startedAt}</td>
-                    </motion.tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
-}
+              <p className="text-xs text-[#94A3B8] mb-4 leading-relaxed">{integration.description}</p>
 
-/* MAIN PAGE */
-export default function Integrations() {
-  const [integrations, setIntegrations] = useState<Integration[]>(INTEGRATIONS);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
-  const [showOAuthModal, setShowOAuthModal] = useState<string | null>(null);
-
-  const connectedCount = integrations.filter((i) => i.connected).length;
-
-  const handleToggle = useCallback((id: string) => {
-    setIntegrations((prev) =>
-      prev.map((i) => {
-        if (i.id !== id) return i;
-        if (i.connected) {
-          return { ...i, connected: false, lastSync: null, syncStatus: 'idle' as const };
-        } else {
-          setShowOAuthModal(id);
-          return i;
-        }
-      })
-    );
-  }, []);
-
-  const handleOAuthComplete = useCallback((id: string) => {
-    setIntegrations((prev) =>
-      prev.map((i) => (i.id === id ? { ...i, connected: true, lastSync: 'Just now', syncStatus: 'success' as const } : i))
-    );
-    setShowOAuthModal(null);
-  }, []);
-
-  const handleSync = useCallback((id: string) => {
-    setIntegrations((prev) => prev.map((i) => (i.id === id ? { ...i, syncStatus: 'syncing' as const } : i)));
-    setTimeout(() => {
-      setIntegrations((prev) =>
-        prev.map((i) =>
-          i.id === id
-            ? { ...i, syncStatus: 'success' as const, lastSync: 'Just now', dataPoints: i.dataPoints.map((dp) => ({ ...dp, value: Math.floor(Math.random() * 5000).toString(), change: `+${Math.floor(Math.random() * 500)}` })) }
-            : i
-        )
-      );
-    }, 2000);
-  }, []);
-
-  const oauthIntegration = showOAuthModal ? integrations.find((i) => i.id === showOAuthModal) : null;
-
-  return (
-    <div className="p-8 min-h-[calc(100dvh-64px)]">
-      <motion.div initial={{ opacity: 0, y: 25 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: easeOutExpo }} className="mb-8">
-        <div className="flex items-center justify-between flex-wrap gap-4">
-          <div>
-            <p className="text-[13px] text-[#64748B] mb-1">App <span className="text-[#475569]">/</span> <span className="text-[#F1F5F9]">Integrations</span></p>
-            <h1 className="text-[36px] font-headline font-bold text-[#F1F5F9] leading-[1.15] tracking-[-0.02em] mb-2">Integrations</h1>
-            <p className="text-[16px] text-[#94A3B8] leading-[1.6] max-w-[640px] mb-4">Connect your GHL account, social media platforms, and ad accounts to sync data and automate marketing workflows.</p>
-            <div className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#111118] border border-[rgba(255,255,255,0.06)] text-[13px] text-[#94A3B8]"><span className="w-2 h-2 rounded-full bg-[#10B981]" />{connectedCount} connected</span>
-              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#111118] border border-[rgba(255,255,255,0.06)] text-[13px] text-[#94A3B8]"><span className="w-2 h-2 rounded-full bg-[#64748B]" />{integrations.length - connectedCount} available</span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
-        {integrations.map((int) => (
-          <IntegrationCard key={int.id} integration={int} onToggle={handleToggle} onSync={handleSync} expanded={expandedId === int.id} onExpand={() => setExpandedId(expandedId === int.id ? null : int.id)} />
-        ))}
-      </div>
-
-      <SyncHistory />
-
-      <AnimatePresence>
-        {showOAuthModal && oauthIntegration && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setShowOAuthModal(null)}>
-            <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }} transition={{ duration: 0.3, ease: easeOutExpo }} className="bg-[#111118] border border-[rgba(255,255,255,0.08)] rounded-2xl w-[480px] max-w-[90vw] overflow-hidden shadow-2xl" onClick={(e) => e.stopPropagation()}>
-              <div className="p-6 border-b border-[rgba(255,255,255,0.06)]">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-xl flex items-center justify-center text-white" style={{ background: `linear-gradient(135deg, ${oauthIntegration.color}, ${oauthIntegration.color}88)` }}>
-                    {oauthIntegration.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-[#F1F5F9]">Connect {oauthIntegration.name}</h3>
-                    <p className="text-[13px] text-[#94A3B8]">Authorize LixenAI to access your {oauthIntegration.name} account</p>
-                  </div>
-                </div>
+              {/* Features */}
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {integration.features.map(f => (
+                  <span key={f} className="px-2 py-0.5 rounded-md bg-[rgba(255,255,255,0.03)] text-[10px] text-[#94A3B8] border border-[rgba(255,255,255,0.04)]">
+                    {f}
+                  </span>
+                ))}
               </div>
-              <div className="p-6">
-                <p className="text-[13px] font-medium text-[#F1F5F9] mb-3">This integration will have access to:</p>
-                <div className="space-y-2 mb-5">
-                  {oauthIntegration.features.slice(0, 4).map((feat) => (
-                    <div key={feat} className="flex items-center gap-3 px-3 py-2 rounded-lg bg-[#0A0A0F]"><Check size={14} className="text-[#10B981] shrink-0" /><span className="text-[13px] text-[#94A3B8]">{feat}</span></div>
-                  ))}
-                </div>
-                <div className="bg-[rgba(245,158,11,0.08)] border border-[rgba(245,158,11,0.15)] rounded-xl p-4 mb-5">
-                  <div className="flex items-start gap-3">
-                    <AlertCircle size={18} className="text-[#F59E0B] shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-[13px] font-medium text-[#F59E0B]">Demo Mode</p>
-                      <p className="text-[12px] text-[#94A3B8] mt-0.5">This is a simulated OAuth flow. In production, you would be redirected to {oauthIntegration.name}'s authorization page. To set up real OAuth, add your API credentials in Settings → API Keys.</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="mb-5">
-                  <label className="block text-[13px] text-[#94A3B8] mb-1.5">API Key / Access Token (optional for demo)</label>
-                  <input type="text" placeholder={`Paste your ${oauthIntegration.name} API key...`} className="w-full h-10 px-3 bg-[#0A0A0F] border border-[rgba(255,255,255,0.1)] rounded-[10px] text-sm text-[#F1F5F9] placeholder-[#64748B] outline-none focus:border-[#8B5CF6] transition-all" />
-                </div>
-                <div className="flex items-center gap-3">
-                  <button onClick={() => handleOAuthComplete(oauthIntegration.id)} className="flex-1 h-10 rounded-[10px] text-sm font-medium text-white hover:brightness-110 transition-all" style={{ background: 'linear-gradient(135deg, #8B5CF6, #06B6D4)' }}>
-                    <span className="flex items-center justify-center gap-2"><Link2 size={14} /> Authorize & Connect</span>
+
+              {/* Actions */}
+              <div className="flex items-center gap-2">
+                {integration.connected ? (
+                  <>
+                    <button
+                      onClick={() => syncNow(integration.id)}
+                      disabled={syncing === integration.id}
+                      className={cn(
+                        'flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
+                        syncing === integration.id
+                          ? 'bg-[rgba(139,92,246,0.1)] text-[#8B5CF6] cursor-wait'
+                          : 'bg-[rgba(139,92,246,0.1)] text-[#A78BFA] hover:bg-[rgba(139,92,246,0.2)]',
+                      )}
+                    >
+                      <RefreshCw size={12} className={syncing === integration.id ? 'animate-spin' : ''} />
+                      {syncing === integration.id ? 'Syncing...' : 'Sync Now'}
+                    </button>
+                    <button
+                      onClick={() => disconnect(integration.id)}
+                      className="px-3 py-1.5 rounded-lg text-xs text-[#EF4444] hover:bg-[rgba(239,68,68,0.1)] transition-colors"
+                    >
+                      Disconnect
+                    </button>
+                    <button
+                      onClick={() => setShowFieldMapping(showFieldMapping === integration.id ? null : integration.id)}
+                      className="px-3 py-1.5 rounded-lg text-xs text-[#94A3B8] hover:bg-[rgba(255,255,255,0.04)] transition-colors"
+                    >
+                      {showFieldMapping === integration.id ? 'Hide' : 'Fields'}
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => openAuth(integration)}
+                    className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-xs font-medium bg-gradient-to-r from-[#8B5CF6] to-[#06B6D4] text-white hover:brightness-110 transition-all"
+                  >
+                    <Link2 size={12} />
+                    Connect
                   </button>
-                  <button onClick={() => setShowOAuthModal(null)} className="h-10 px-4 rounded-[10px] text-sm text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[rgba(255,255,255,0.04)] transition-all border border-[rgba(255,255,255,0.06)]">Cancel</button>
+                )}
+              </div>
+
+              {/* Field Mapping */}
+              <AnimatePresence>
+                {showFieldMapping === integration.id && integration.connected && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    className="mt-4 pt-4 border-t border-[rgba(255,255,255,0.06)]"
+                  >
+                    <FieldMappingPreview platform={integration.id} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Sync History */}
+        <div className="bg-[#111118] border border-[rgba(255,255,255,0.06)] rounded-2xl p-6">
+          <h2 className="text-lg font-bold text-[#F1F5F9] mb-4">Sync History</h2>
+          {syncHistory.length === 0 ? (
+            <p className="text-sm text-[#64748B]">No sync history yet.</p>
+          ) : (
+            <div className="space-y-2">
+              {syncHistory.map(record => {
+                const integration = integrations.find(i => i.id === record.platform);
+                return (
+                  <div key={record.id} className="flex items-center gap-4 py-2 border-b border-[rgba(255,255,255,0.03)] last:border-0">
+                    <span className={cn(
+                      'w-2 h-2 rounded-full shrink-0',
+                      record.status === 'success' ? 'bg-[#10B981]' :
+                      record.status === 'error' ? 'bg-[#EF4444]' : 'bg-[#F59E0B]',
+                    )} />
+                    <span className="text-sm text-[#F1F5F9] w-28">{integration?.name || record.platform}</span>
+                    <span className="text-xs text-[#64748B]">{record.records} records</span>
+                    <span className="text-xs text-[#475569] ml-auto">{new Date(record.timestamp).toLocaleString()}</span>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Auth Modal */}
+      <AnimatePresence>
+        {showAuthModal && authIntegration && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm"
+            onClick={() => setShowAuthModal(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              onClick={e => e.stopPropagation()}
+              className="bg-[#111118] border border-[rgba(255,255,255,0.08)] rounded-2xl p-6 w-full max-w-md mx-4 shadow-2xl"
+            >
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: `${authIntegration.color}15` }}>
+                  <PlatformIcon id={authIntegration.id} color={authIntegration.color} />
                 </div>
+                <div>
+                  <h3 className="text-base font-semibold text-[#F1F5F9]">Connect {authIntegration.name}</h3>
+                  <p className="text-xs text-[#64748B]">Enter your API credentials</p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm text-[#94A3B8] mb-1.5">API Key / Access Token</label>
+                  <input
+                    value={apiKeyInput}
+                    onChange={e => setApiKeyInput(e.target.value)}
+                    placeholder="Enter your API key..."
+                    className="w-full h-10 px-4 rounded-xl bg-[#0A0A0F] border border-[rgba(255,255,255,0.08)] text-sm text-[#F1F5F9] placeholder-[#475569] outline-none focus:border-[#8B5CF6]"
+                  />
+                </div>
+                <div className="bg-[rgba(245,158,11,0.05)] border border-[rgba(245,158,11,0.1)] rounded-xl p-3 flex items-start gap-2">
+                  <AlertCircle size={14} className="text-[#F59E0B] shrink-0 mt-0.5" />
+                  <p className="text-xs text-[#94A3B8]">Your API key is stored locally in your browser. It is never sent to our servers.</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 mt-6">
+                <button
+                  onClick={() => setShowAuthModal(false)}
+                  className="flex-1 h-10 rounded-xl text-sm font-medium text-[#94A3B8] bg-[#0A0A0F] border border-[rgba(255,255,255,0.08)] hover:bg-[rgba(255,255,255,0.04)] transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={connect}
+                  disabled={!apiKeyInput.trim()}
+                  className={cn(
+                    'flex-1 h-10 rounded-xl text-sm font-semibold transition-all',
+                    apiKeyInput.trim()
+                      ? 'bg-gradient-to-r from-[#8B5CF6] to-[#06B6D4] text-white hover:brightness-110'
+                      : 'bg-[#1A1A24] text-[#475569] cursor-not-allowed',
+                  )}
+                >
+                  Connect
+                </button>
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+/* ─── Field Mapping Preview ─── */
+function FieldMappingPreview({ platform }: { platform: string }) {
+  const mappings: Record<string, { from: string; to: string }[]> = {
+    ghl: [
+      { from: 'First Name', to: 'first_name' },
+      { from: 'Last Name', to: 'last_name' },
+      { from: 'Email', to: 'email' },
+      { from: 'Phone', to: 'phone' },
+      { from: 'Company', to: 'company_name' },
+    ],
+    linkedin: [
+      { from: 'LinkedIn ID', to: 'social_id' },
+      { from: 'Headline', to: 'title' },
+      { from: 'Industry', to: 'industry' },
+      { from: 'Location', to: 'location' },
+    ],
+    default: [
+      { from: 'ID', to: 'external_id' },
+      { from: 'Name', to: 'full_name' },
+      { from: 'Email', to: 'email' },
+      { from: 'Created', to: 'created_at' },
+    ],
+  };
+
+  const fieldMap = mappings[platform] || mappings.default;
+
+  return (
+    <div className="space-y-2">
+      <p className="text-[11px] font-semibold text-[#94A3B8] uppercase tracking-wider mb-2">Field Mapping</p>
+      {fieldMap.map(m => (
+        <div key={m.from} className="flex items-center gap-3 text-xs">
+          <span className="text-[#94A3B8] w-24">{m.from}</span>
+          <ChevronRight />
+          <span className="text-[#F1F5F9] font-medium">{m.to}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ChevronRight() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9 18 15 12 9 6" />
+    </svg>
   );
 }
