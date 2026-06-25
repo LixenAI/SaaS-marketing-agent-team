@@ -495,3 +495,439 @@ function WorkflowCard({
     </motion.div>
   );
 }
+
+/* ═══════════════════════ WORKFLOW RUNNER ═══════════════════════ */
+
+function WorkflowRunner({
+  workflow,
+  onComplete,
+  onCancel,
+}: {
+  workflow: Workflow;
+  onComplete: () => void;
+  onCancel: () => void;
+}) {
+  const [currentStep, setCurrentStep] = useState(0);
+  const [formData, setFormData] = useState<Record<string, string>>({});
+  const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
+  const [saving, setSaving] = useState(false);
+
+  const step = workflow.steps[currentStep];
+  const isLastStep = currentStep === workflow.steps.length - 1;
+  const progress = ((currentStep + 1) / workflow.steps.length) * 100;
+
+  const handleFieldChange = (label: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [label]: value }));
+  };
+
+  const toggleChecklistItem = (item: string) => {
+    setCheckedItems((prev) => {
+      const next = new Set(prev);
+      if (next.has(item)) next.delete(item);
+      else next.add(item);
+      return next;
+    });
+  };
+
+  const handleSave = () => {
+    setSaving(true);
+    setTimeout(() => setSaving(false), 800);
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.4, ease: easeOutExpo }}
+      className="bg-[#111118] rounded-2xl border border-[rgba(255,255,255,0.06)] overflow-hidden"
+    >
+      {/* Header */}
+      <div className="p-6 border-b border-[rgba(255,255,255,0.06)]">
+        <div className="flex items-center justify-between mb-4">
+          <button
+            onClick={onCancel}
+            className="flex items-center gap-1.5 text-sm text-[#94A3B8] hover:text-[#F1F5F9] transition-colors"
+          >
+            <ArrowLeft size={16} />
+            Back to Workflows
+          </button>
+          {saving && (
+            <span className="flex items-center gap-1.5 text-xs text-[#10B981]">
+              <Save size={12} />
+              Saved
+            </span>
+          )}
+        </div>
+
+        <h2 className="text-2xl font-semibold text-[#F1F5F9] font-headline mb-2">
+          {workflow.name}
+        </h2>
+
+        {/* Progress bar */}
+        <div className="mt-4">
+          <div className="flex items-center justify-between text-xs text-[#64748B] mb-2">
+            <span>Step {currentStep + 1} of {workflow.steps.length}</span>
+            <span>{Math.round(progress)}%</span>
+          </div>
+          <div className="h-[3px] bg-[#1A1A24] rounded-full overflow-hidden">
+            <motion.div
+              className="h-full rounded-full bg-gradient-to-r from-[#8B5CF6] to-[#06B6D4]"
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.4, ease: easeOutExpo }}
+            />
+          </div>
+        </div>
+
+        {/* Step dots */}
+        <div className="flex items-center gap-2 mt-4">
+          {workflow.steps.map((s, i) => (
+            <button
+              key={s.id}
+              onClick={() => i <= currentStep && setCurrentStep(i)}
+              className={cn(
+                'w-8 h-8 rounded-full text-xs font-medium transition-all duration-200',
+                i === currentStep
+                  ? 'bg-[#8B5CF6] text-white'
+                  : i < currentStep
+                    ? 'bg-[#10B981]/20 text-[#10B981]'
+                    : 'bg-[#1A1A24] text-[#64748B]',
+              )}
+            >
+              {i < currentStep ? <Check size={14} className="mx-auto" /> : i + 1}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Step content */}
+      <div className="p-6">
+        <motion.div
+          key={currentStep}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.3, ease: easeOutExpo }}
+        >
+          <h3 className="text-xl font-semibold text-[#F1F5F9] mb-2">{step.title}</h3>
+          <p className="text-sm text-[#94A3B8] mb-6">{step.description}</p>
+
+          {/* Checklist */}
+          {step.checklist && (
+            <div className="space-y-3 mb-6">
+              {step.checklist.map((item) => (
+                <label
+                  key={item}
+                  className="flex items-start gap-3 p-3 rounded-xl bg-[#0A0A0F] border border-[rgba(255,255,255,0.06)] cursor-pointer hover:border-[rgba(139,92,246,0.3)] transition-colors"
+                >
+                  <div
+                    className={cn(
+                      'w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 mt-0.5 transition-all',
+                      checkedItems.has(item)
+                        ? 'bg-[#8B5CF6] border-[#8B5CF6]'
+                        : 'border-[#475569]',
+                    )}
+                    onClick={() => toggleChecklistItem(item)}
+                  >
+                    {checkedItems.has(item) && <Check size={12} className="text-white" />}
+                  </div>
+                  <span className={cn('text-sm', checkedItems.has(item) ? 'text-[#F1F5F9] line-through' : 'text-[#94A3B8]')}>
+                    {item}
+                  </span>
+                </label>
+              ))}
+            </div>
+          )}
+
+          {/* Form fields */}
+          <div className="space-y-4">
+            {step.fields.map((field) => (
+              <div key={field.label}>
+                <label className="block text-sm text-[#94A3B8] mb-1.5">
+                  {field.label}
+                  {field.required && <span className="text-[#F43F5E] ml-1">*</span>}
+                </label>
+                {field.type === 'textarea' ? (
+                  <textarea
+                    value={formData[field.label] || ''}
+                    onChange={(e) => handleFieldChange(field.label, e.target.value)}
+                    placeholder={field.placeholder}
+                    rows={3}
+                    className="w-full px-3 py-2.5 bg-[#0A0A0F] border border-[rgba(255,255,255,0.1)] rounded-[10px] text-sm text-[#F1F5F9] placeholder-[#64748B] outline-none focus:border-[#8B5CF6] transition-all resize-none"
+                  />
+                ) : field.type === 'select' ? (
+                  <select
+                    value={formData[field.label] || ''}
+                    onChange={(e) => handleFieldChange(field.label, e.target.value)}
+                    className="w-full h-10 px-3 bg-[#0A0A0F] border border-[rgba(255,255,255,0.1)] rounded-[10px] text-sm text-[#F1F5F9] outline-none focus:border-[#8B5CF6] cursor-pointer"
+                  >
+                    <option value="">{field.placeholder || 'Select...'}</option>
+                    {field.options?.map((opt) => (
+                      <option key={opt} value={opt}>{opt}</option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    value={formData[field.label] || ''}
+                    onChange={(e) => handleFieldChange(field.label, e.target.value)}
+                    placeholder={field.placeholder}
+                    className="w-full h-10 px-3 bg-[#0A0A0F] border border-[rgba(255,255,255,0.1)] rounded-[10px] text-sm text-[#F1F5F9] placeholder-[#64748B] outline-none focus:border-[#8B5CF6] transition-all"
+                  />
+                )}
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Footer actions */}
+      <div className="p-6 border-t border-[rgba(255,255,255,0.06)] flex items-center justify-between">
+        <button
+          onClick={handleSave}
+          className="flex items-center gap-2 px-4 py-2 rounded-[10px] text-sm text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[rgba(255,255,255,0.04)] transition-all"
+        >
+          <Save size={14} />
+          Save Draft
+        </button>
+        <div className="flex items-center gap-3">
+          {currentStep > 0 && (
+            <button
+              onClick={() => setCurrentStep((s) => s - 1)}
+              className="flex items-center gap-1.5 px-5 py-2.5 rounded-[10px] text-sm font-medium text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[rgba(255,255,255,0.04)] transition-all"
+            >
+              <ArrowLeft size={14} />
+              Previous
+            </button>
+          )}
+          <button
+            onClick={() => {
+              if (isLastStep) {
+                onComplete();
+              } else {
+                setCurrentStep((s) => s + 1);
+                handleSave();
+              }
+            }}
+            className="flex items-center gap-1.5 px-5 py-2.5 rounded-[10px] text-sm font-medium text-white hover:brightness-110 transition-all"
+            style={{ background: 'linear-gradient(135deg, #8B5CF6, #06B6D4)' }}
+          >
+            {isLastStep ? (
+              <>
+                <CheckCircle2 size={14} />
+                Complete Workflow
+              </>
+            ) : (
+              <>
+                Next
+                <ArrowRight size={14} />
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ═══════════════════════ WORKFLOW HISTORY ═══════════════════════ */
+
+function WorkflowHistory() {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay: 0.3, ease: easeOutExpo }}
+      className="mt-8"
+    >
+      <button
+        onClick={() => setExpanded(!expanded)}
+        className="flex items-center gap-2 text-sm text-[#94A3B8] hover:text-[#F1F5F9] transition-colors mb-4"
+      >
+        {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        Workflow History
+      </button>
+
+      <AnimatePresence>
+        {expanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: easeOutExpo }}
+            className="overflow-hidden"
+          >
+            <div className="bg-[#111118] rounded-2xl border border-[rgba(255,255,255,0.06)] overflow-hidden">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-[rgba(255,255,255,0.06)]">
+                    <th className="text-left text-xs font-medium text-[#64748B] px-6 py-3">Workflow</th>
+                    <th className="text-left text-xs font-medium text-[#64748B] px-6 py-3">Status</th>
+                    <th className="text-left text-xs font-medium text-[#64748B] px-6 py-3">Steps</th>
+                    <th className="text-left text-xs font-medium text-[#64748B] px-6 py-3">Started</th>
+                    <th className="text-left text-xs font-medium text-[#64748B] px-6 py-3">Completed</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {INITIAL_HISTORY.map((run, i) => (
+                    <motion.tr
+                      key={run.id}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.05 }}
+                      className="border-b border-[rgba(255,255,255,0.04)] hover:bg-[rgba(255,255,255,0.02)] transition-colors"
+                    >
+                      <td className="px-6 py-3 text-sm text-[#F1F5F9]">{run.workflowName}</td>
+                      <td className="px-6 py-3">
+                        <span className={cn('inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium', statusBadgeClasses(run.status))}>
+                          {statusLabel(run.status)}
+                        </span>
+                      </td>
+                      <td className="px-6 py-3 text-sm text-[#94A3B8]">{run.stepsCompleted}/{run.totalSteps}</td>
+                      <td className="px-6 py-3 text-sm text-[#64748B]">{run.startedAt}</td>
+                      <td className="px-6 py-3 text-sm text-[#64748B]">{run.completedAt || '-'}</td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
+}
+
+/* ═══════════════════════ MAIN PAGE ═══════════════════════ */
+
+export default function Workflows() {
+  const [activeWorkflow, setActiveWorkflow] = useState<Workflow | null>(null);
+  const [completedWorkflow, setCompletedWorkflow] = useState<Workflow | null>(null);
+
+  return (
+    <div className="p-8 min-h-[calc(100dvh-64px)]">
+      {/* Header */}
+      {!activeWorkflow && !completedWorkflow && (
+        <motion.section
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: easeOutExpo }}
+          className="mb-8"
+        >
+          <p className="text-[13px] text-[#64748B] mb-1">
+            Operations <span className="text-[#475569]">/</span>{' '}
+            <span className="text-[#F1F5F9]">Workflows</span>
+          </p>
+          <h1 className="text-[36px] font-headline font-bold text-[#F1F5F9] leading-[1.15] tracking-[-0.02em] mb-2">
+            Workflows
+          </h1>
+          <p className="text-[16px] text-[#94A3B8] leading-[1.6] max-w-[640px] mb-5">
+            Step-by-step guided workflows to execute marketing processes with consistency and quality.
+          </p>
+          <div className="flex items-center gap-3">
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#111118] border border-[rgba(255,255,255,0.06)] text-[13px] text-[#94A3B8]">
+              <span className="w-2 h-2 rounded-full bg-[#8B5CF6]" />
+              2 active
+            </span>
+            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#111118] border border-[rgba(255,255,255,0.06)] text-[13px] text-[#94A3B8]">
+              <span className="w-2 h-2 rounded-full bg-[#10B981]" />
+              12 completed this month
+            </span>
+          </div>
+        </motion.section>
+      )}
+
+      {/* Workflow Catalog */}
+      <AnimatePresence mode="wait">
+        {!activeWorkflow && !completedWorkflow && (
+          <motion.section
+            key="catalog"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {WORKFLOW_DEFINITIONS.map((wf) => (
+                <WorkflowCard
+                  key={wf.id}
+                  workflow={wf}
+                  onStart={setActiveWorkflow}
+                />
+              ))}
+            </div>
+            <WorkflowHistory />
+          </motion.section>
+        )}
+
+        {/* Active Runner */}
+        {activeWorkflow && (
+          <motion.section
+            key="runner"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.4, ease: easeOutExpo }}
+          >
+            <WorkflowRunner
+              workflow={activeWorkflow}
+              onComplete={() => {
+                setCompletedWorkflow(activeWorkflow);
+                setActiveWorkflow(null);
+              }}
+              onCancel={() => setActiveWorkflow(null)}
+            />
+          </motion.section>
+        )}
+
+        {/* Completion */}
+        {completedWorkflow && (
+          <motion.section
+            key="completion"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: easeOutExpo }}
+            className="flex flex-col items-center justify-center py-20"
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2, ease: easeOutBack }}
+              className="w-20 h-20 rounded-full bg-[#10B981]/20 flex items-center justify-center mb-6"
+            >
+              <CheckCircle2 size={40} className="text-[#10B981]" />
+            </motion.div>
+            <h2 className="text-2xl font-semibold text-[#F1F5F9] font-headline mb-2">
+              Workflow Complete!
+            </h2>
+            <p className="text-[#94A3B8] mb-8">
+              {completedWorkflow.name} has been completed successfully.
+            </p>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => setCompletedWorkflow(null)}
+                className="px-6 py-2.5 rounded-[10px] text-sm font-medium text-white hover:brightness-110 transition-all"
+                style={{ background: 'linear-gradient(135deg, #8B5CF6, #06B6D4)' }}
+              >
+                Back to Workflows
+              </button>
+              <button
+                onClick={() => {
+                  setCompletedWorkflow(null);
+                  setActiveWorkflow(completedWorkflow);
+                }}
+                className="flex items-center gap-2 px-6 py-2.5 rounded-[10px] text-sm font-medium text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-[rgba(255,255,255,0.04)] transition-all border border-[rgba(255,255,255,0.06)]"
+              >
+                <RotateCcw size={14} />
+                Run Again
+              </button>
+            </div>
+          </motion.section>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
