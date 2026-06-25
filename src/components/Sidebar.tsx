@@ -9,6 +9,7 @@ import {
   Settings,
   ShieldCheck,
   Wand2,
+  Link2,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -49,6 +50,7 @@ const navSections: NavSection[] = [
   {
     title: 'App',
     items: [
+      { label: 'Integrations', icon: <Link2 size={20} />, path: '/integrations' },
       { label: 'Asset Generator', icon: <Wand2 size={20} />, path: '/assets' },
       { label: 'Settings', icon: <Settings size={20} />, path: '/settings' },
     ],

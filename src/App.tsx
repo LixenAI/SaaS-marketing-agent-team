@@ -8,6 +8,7 @@ import Brand from './pages/Brand';
 import QA from './pages/QA';
 import Assets from './pages/Assets';
 import SettingsPage from './pages/Settings';
+import Integrations from './pages/Integrations';
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
         <Route path="qa" element={<QA />} />
         <Route path="assets" element={<Assets />} />
         <Route path="settings" element={<SettingsPage />} />
+        <Route path="integrations" element={<Integrations />} />
       </Route>
     </Routes>
   );
